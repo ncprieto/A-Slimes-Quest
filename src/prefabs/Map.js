@@ -1,0 +1,284 @@
+class Map{
+    constructor(rows, maxRooms){
+        this.rows = rows;
+        this.maxRooms = maxRooms;                                           // shoudl make ~ 1 to 6 more rooms than maxRooms (not guaranteed tho)
+        this.startingrow = Math.floor(rows / 2);
+        this.startingcol = this.startingrow;
+        this.map = Array(this.rows);
+        for(let i = 0; i < this.rows; i++){
+            this.map[i] = [0,0,0,0,0];
+        }
+        this.map[this.startingrow][this.startingcol] = {
+            exits: {
+                up: false,
+                down: false,
+                left: false,
+                right: false,
+                made: false
+            }
+        }
+        this.curRooms = 1;
+        this.generateExits(this.startingrow, this.startingcol);
+        this.cleanUp();
+    }
+    generateExits(row, col){
+        let exitArr = ['up', 'down', 'left', 'right'];
+        let potentialExits = Math.floor(Math.random() * (5 - 3) + 3);         // this guarantess that atleast 3 exits will be made for the current room
+        for(let i = 0; i < potentialExits; i++){                              // however there is a chance that those 3 exits
+            let exitIndex = Math.floor(Math.random() * exitArr.length);       // already exist for that room or that they cant be created for that room
+            switch(exitArr[exitIndex]){                                       // such as creating rooms that would go outside of the map
+                case('up'):
+                    if(!this.map[row][col].exits.up && row != 0){             // bounds checking so we dont go out of the 2D array and if the exit we want doesnt already exist
+                        if(this.map[row - 1][col] == 0){                      // if no room has been made at the index above the current one
+                            this.map[row][col].exits.up = true;               // then create that exit 
+                        }
+                        else if(!this.map[row - 1][col].exits.made){          // if room exits above the current one then
+                            this.map[row][col].exits.up = true;               // create exit in current room and create exit
+                            this.map[row - 1][col].exits.down = true;         // in the room above (if it isnt already created)
+                        }
+                    }
+                    break;
+                case('down'):
+                    if(!this.map[row][col].exits.down  && row != this.rows - 1){
+                        if(this.map[row + 1][col] == 0){
+                            this.map[row][col].exits.down = true;
+                        }
+                        else if(!this.map[row + 1][col].exits.made){
+                            this.map[row][col].exits.down = true;
+                            this.map[row + 1][col].exits.up = true;
+                        }
+                    }
+                    break;
+                case('left'):
+                    if(!this.map[row][col].exits.left && col != 0){
+                        if(this.map[row][col - 1] == 0){
+                            this.map[row][col].exits.left = true;
+                        }
+                        else if(!this.map[row][col - 1].exits.made){
+                            this.map[row][col].exits.left = true;
+                            this.map[row][col - 1].exits.right = true;
+                        }
+                    }
+                    break;
+                case('right'):
+                    if(!this.map[row][col].exits.right && col != this.rows - 1){
+                        if(this.map[row][col + 1] == 0){
+                            this.map[row][col].exits.right = true;
+                        }
+                        else if(!this.map[row][col + 1].exits.made){
+                            this.map[row][col].exits.right = true;
+                            this.map[row][col + 1].exits.left = true;
+                        }
+                    }
+                    break;
+            }
+            exitArr.splice(exitIndex, 1);                                                   // after we create the exit we want we remove it from exitArr
+        }                                                                                   // gets rid of trying to create duplicate exits
+        this.map[row][col].exits.made = true;
+        if(this.map[row][col].exits.up){
+            this.goUp(row, col);
+        }
+        if(this.map[row][col].exits.down){
+            this.goDown(row, col);
+        }
+        if(this.map[row][col].exits.left){
+            this.goLeft(row, col);
+        }
+        if(this.map[row][col].exits.right){
+            this.goRight(row, col);
+        }
+        if(this.curRooms > this.maxRooms){
+            return;
+        }
+    }
+    goUp(row, col){
+        if(this.map[row - 1][col] != 0){                    // if room abover map[row][col] already exitst
+            if(this.map[row - 1][col].exits.made){          // if the exits have already been made for this room
+                this.map[row - 1][col].exits.down = true;   // then make the exit to the original room in this room
+                return;                                     // making exits for a room that already has had it exits made
+            }                                               // makes things really messy
+        }
+        if(this.map[row - 1][col] == 0){                    // if the map[row - 1][col] doesnt have a room obj in it then make
+            this.map[row - 1][col] = {                      // one with some initial variables
+                exits: {
+                    up: false,
+                    down: true,
+                    left: false,
+                    right: false,
+                    made: false
+                }
+            }
+        }
+        this.curRooms += 1;
+        if(this.curRooms >= this.maxRooms){
+            return;
+        }
+        if(Math.floor(Math.random() * 4) == 3){             // 1 in 4 chance that we dont make exits for the room at map[row - 1][col]
+            this.map[row - 1][col].exits.made = true;
+            return;
+        }
+        else{
+            this.generateExits(row - 1, col);
+        }
+    }
+    goDown(row, col){
+        if(this.map[row + 1][col] != 0){
+            if(this.map[row + 1][col].exits.made){
+                this.map[row + 1][col].exits.up = true;
+                return;
+            }
+        }
+        if(this.map[row + 1][col] == 0){
+            this.map[row + 1][col] = {
+                exits: {
+                    up: true,
+                    down: false,
+                    left: false,
+                    right: false,
+                    made: false
+                }
+            }
+        }
+        this.curRooms += 1;
+        if(this.curRooms >= this.maxRooms){
+            return;
+        }
+        if(Math.floor(Math.random() * 4) == 3){
+            this.map[row + 1][col].exits.made = true;
+            return;
+        }
+        else{
+            this.generateExits(row + 1, col);
+        }
+    }
+    goLeft(row, col){
+        if(this.map[row][col - 1]  != 0){
+            if(this.map[row][col - 1].exits.made){
+                this.map[row][col - 1].exits.right = true;
+                return;
+            }
+        }
+        if(this.map[row][col - 1] == 0){
+            this.map[row][col - 1] = {
+                exits: {
+                    up: false,
+                    down: false,
+                    left: false,
+                    right: true,
+                    made: false
+                }
+            }
+        }
+        this.curRooms += 1;
+        if(this.curRooms >= this.maxRooms){
+            return;
+        }
+        if(Math.floor(Math.random() * 4) == 3){
+            this.map[row][col - 1].exits.made = true;
+            return;
+        }
+        else{
+            this.generateExits(row, col - 1);
+        }
+    }
+    goRight(row, col){
+        if(this.map[row][col + 1] != 0){
+            if(this.map[row][col + 1].exits.made){
+                this.map[row][col + 1].exits.left = true;
+                return;
+            }
+        }
+        
+        if(this.map[row][col + 1] == 0){
+            this.map[row][col + 1] = {
+                exits: {
+                    up: false,
+                    down: false,
+                    left: true,
+                    right: false,
+                    made: false
+                }
+            }
+        }
+        this.curRooms += 1;
+        if(this.curRooms >= this.maxRooms){
+            return;
+        }
+        if(Math.floor(Math.random() * 4) == 3){
+            this.map[row][col + 1].exits.made = true;
+            return;
+        }
+        else{
+            this.generateExits(row, col + 1);
+        }
+    }
+    /* printMap() prints the map
+     * just makes visualizing the map a bit easier
+     */
+    printMap(){
+        for(let i = 0; i < this.rows; i ++){
+            let final = "";
+            for(let j  = 0; j < this.rows; j ++){
+                let temp = "";
+                if(this.map[i][j] != 0){
+                    if(this.map[i][j].exits.up){
+                        temp += 'u';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].exits.down){
+                        temp += 'd';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].exits.left){
+                        temp += 'l';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].exits.right){
+                        temp += 'r';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                }
+                while(temp.length < 4){
+                    temp += '0';
+                }
+                temp += " ";
+                final += temp;
+            }
+            console.log(final);
+        }
+    }
+    /* cleanUp() pretty much cleans up any parts of the map
+     * where two rooms exits do not match
+     * if room [2][2] has a left exit then it it ensures that
+     * the room at [2][1] has a right exit and so on
+     */
+    cleanUp(){
+        for(let i = 0; i < this.rows; i ++){
+            for(let j  = 0; j < this.rows; j ++){
+                if(this.map[i][j] == 0){
+                    continue;
+                }
+                if(this.map[i][j].exits.up){
+                    this.map[i - 1][j].exits.down  = true;
+                }
+                if(this.map[i][j].exits.down){
+                    this.map[i + 1][j].exits.up  = true;
+                }
+                if(this.map[i][j].exits.left){
+                    this.map[i][j - 1].exits.right  = true;
+                }
+                if(this.map[i][j].exits.right){
+                    this.map[i][j + 1].exits.left  = true;
+                }
+            }
+        }
+    }
+}

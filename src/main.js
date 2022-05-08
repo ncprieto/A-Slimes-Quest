@@ -4,6 +4,8 @@ let config = {
     height: 720,
     scene: [Menu]
 }
-
+let room = {
+    exits: []
+}
 let game = new Phaser.Game(config);
 let keyRIGHT, keyLEFT, keySPACE;

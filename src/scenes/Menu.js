@@ -5,6 +5,8 @@ class Menu extends Phaser.Scene{
     preload(){
     }
     create(){
+        this.map = new Map(5, 20);
+        this.map.printMap();
     }
     update(){
     }
