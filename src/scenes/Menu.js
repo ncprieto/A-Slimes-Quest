@@ -30,15 +30,11 @@ class Menu extends Phaser.Scene{
         this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to Start', menuConfig).setOrigin(0.5);
 
         //create games
-        gameRooms.stage1 = new Map(this, "stage1", 5,20);
-        gameRooms.stage2 = new Map(this, "stage2", 5,20);
-        gameRooms.stage3 = new Map(this, "stage3", 5,20);
+        gameRooms.push(new Map(this, "stage1", 5,20));
+        gameRooms.push(new Map(this, "stage2", 5,20));
+        gameRooms.push(new Map(this, "stage3", 5,20));
 
-        gameRooms.stage1.printMap();
-        console.log("/");
-        gameRooms.stage2.printMap();
-        console.log("/");
-        gameRooms.stage3.printMap();
+        gameRooms[0].printMap();
         
 
     }
@@ -47,7 +43,7 @@ class Menu extends Phaser.Scene{
         //console.log(game.config.scene);
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
             
-            this.scene.start(gameRooms.stage1.map[3][3].exits.scene.sceneName, "MADE");
+            this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName, "MADE");
         }
     }
     

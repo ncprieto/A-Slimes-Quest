@@ -7,10 +7,6 @@ let config = {
 let room = {
     exits: []
 }
-let gameRooms = {
-    stage1: null,
-    stage2: null,
-    stage3: null,
-}
+let gameRooms = [];
 let game = new Phaser.Game(config);
 let keyRIGHT, keyLEFT, keyUP, keyDOWN, keySPACE;

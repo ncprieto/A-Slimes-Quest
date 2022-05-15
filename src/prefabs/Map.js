@@ -263,6 +263,8 @@ class Map{
             console.log(final);
         }
     }
+    
+
     /* cleanUp() pretty much cleans up any parts of the map
      * where two rooms exits do not match
      * if room [2][2] has a left exit then it it ensures that
@@ -293,7 +295,7 @@ class Map{
         for(let i = 0; i < this.rows; i ++){
             for(let j  = 0; j < this.rows; j ++){
                 if(this.map[i][j] != 0){
-                    this.map[i][j].exits.scene = new Room(this.name + i + j);
+                    this.map[i][j].exits.scene = new Room(this.name + "_" + i + j);
                     this.scene.scene.add(this.map[i][j].exits.scene.sceneName, this.map[i][j].exits.scene);
                     if(!this.map[i][j].exits.scene) {
                         console.log("failed to create room");
@@ -302,4 +304,5 @@ class Map{
             }
         }
     }
+
 }
