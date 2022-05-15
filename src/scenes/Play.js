@@ -3,9 +3,16 @@ class Play extends Phaser.Scene{
         super("playScene");
     }
     preload(){
+        this.load.image('player', './assets/square_slime.png');
+
     }
     create(){
+        this.player = new Player(this, 100, 100, 'player', 0).setOrigin(0.5,0.5);
+        
     }
-    update(){
+    update(){ 
+        console.log(this.scene.settings.data[1]);  
+        //console.log();
+        this.player.update();
     }
 }

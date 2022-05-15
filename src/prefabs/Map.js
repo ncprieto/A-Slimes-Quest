@@ -1,5 +1,7 @@
 class Map{
-    constructor(rows, maxRooms){
+    constructor(scene, name, rows, maxRooms){
+        this.scene = scene;
+        this.name = name;
         this.rows = rows;
         this.maxRooms = maxRooms;                                           // shoudl make ~ 1 to 6 more rooms than maxRooms (not guaranteed tho)
         this.startingrow = Math.floor(rows / 2);
@@ -14,12 +16,14 @@ class Map{
                 down: false,
                 left: false,
                 right: false,
-                made: false
+                made: false,
+                scene: null
             }
         }
         this.curRooms = 1;
         this.generateExits(this.startingrow, this.startingcol);
         this.cleanUp();
+        this.generateScenes();
     }
     generateExits(row, col){
         let exitArr = ['up', 'down', 'left', 'right'];
@@ -105,7 +109,8 @@ class Map{
                     down: true,
                     left: false,
                     right: false,
-                    made: false
+                    made: false,
+                    scene: null
                 }
             }
         }
@@ -135,7 +140,8 @@ class Map{
                     down: false,
                     left: false,
                     right: false,
-                    made: false
+                    made: false,
+                    scene: null
                 }
             }
         }
@@ -165,7 +171,8 @@ class Map{
                     down: false,
                     left: false,
                     right: true,
-                    made: false
+                    made: false,
+                    scene: null
                 }
             }
         }
@@ -196,7 +203,8 @@ class Map{
                     down: false,
                     left: true,
                     right: false,
-                    made: false
+                    made: false,
+                    scene: null
                 }
             }
         }
@@ -277,6 +285,19 @@ class Map{
                 }
                 if(this.map[i][j].exits.right){
                     this.map[i][j + 1].exits.left  = true;
+                }
+            }
+        }
+    }
+    generateScenes() {
+        for(let i = 0; i < this.rows; i ++){
+            for(let j  = 0; j < this.rows; j ++){
+                if(this.map[i][j] != 0){
+                    this.map[i][j].exits.scene = new Room(this.name + i + j);
+                    this.scene.scene.add(this.map[i][j].exits.scene.sceneName, this.map[i][j].exits.scene);
+                    if(!this.map[i][j].exits.scene) {
+                        console.log("failed to create room");
+                    }
                 }
             }
         }
