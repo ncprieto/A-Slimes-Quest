@@ -2,7 +2,17 @@ let config = {
     type: Phaser.auto,
     width: 1280,
     height: 720,
-    scene: [Menu, Play]
+    scene: [Menu, Play],
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: true,
+            gravity: {
+                x: 0,
+                y: 0
+            }
+        }
+    },
 }
 let room = {
     exits: []

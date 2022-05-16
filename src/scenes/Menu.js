@@ -3,6 +3,8 @@ class Menu extends Phaser.Scene{
         super("menuScene");
     }
     preload(){
+        this.load.image('player', './assets/square_slime.png');
+        this.load.image('wallTile', './assets/wallTile.jpg');
     }
     create(){
 
