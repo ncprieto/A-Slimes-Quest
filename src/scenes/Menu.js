@@ -3,11 +3,12 @@ class Menu extends Phaser.Scene{
         super("menuScene");
     }
     preload(){
-        this.load.image('player', './assets/square_slime.png');
+        this.load.spritesheet('player', './assets/square_slime.png', { frameWidth: 100, frameHeight: 100});
         this.load.image('wallTile', './assets/wallTile.jpg');
+        this.load.image('door', './assets/doorTemp.png')
     }
     create(){
-
+        
         //keyboard inputs
         keyLEFT  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -41,11 +42,12 @@ class Menu extends Phaser.Scene{
 
     }
     update(){
+        //this.player.update();
         //console.log(gameRooms.stage1.map[3][3].exits.scene.sceneName);
         //console.log(game.config.scene);
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
             //gameRooms[0].bootRooms();
-            this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName, "MADE");
+            this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
         }
     }
     
