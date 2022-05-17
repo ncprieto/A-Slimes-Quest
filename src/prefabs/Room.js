@@ -10,7 +10,7 @@ class Room extends Phaser.Scene{
 
         //stage num
         this.stageNum = parseInt(name.substring(5, name.indexOf('_'))) - 1;
-        this.doorPos = [(0,0), (0,0), (0,0), (0,0)]
+        this.doorPos = [0,0,0,0];
 
     }
     create() {
@@ -20,46 +20,48 @@ class Room extends Phaser.Scene{
         keyUP    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.spawnDoor();
+        //this.spawnDoor();
 
         //create walls
-        this.walls = this.add.group();
-        for(let i = 0; i < game.config.width; i+= 45) {
-            let wallTile = this.physics.add.sprite(i, 70, 'wallTile').setOrigin(0, 0).setScale(0.2);
-            this.walls.add(wallTile);
-        }
-        for(let i = 0; i < game.config.width; i+= 45) {
-            let wallTile = this.physics.add.sprite(i, game.config.height - 45, 'wallTile').setOrigin(0, 0).setScale(0.2);
-            this.walls.add(wallTile);
-        }
-        for(let i = 0; i < game.config.height; i+= 45) {
-            let wallTile = this.physics.add.sprite(0, i, 'wallTile').setOrigin(0, 0).setScale(0.2);
-            this.walls.add(wallTile);
-        }
-        for(let i = 0; i < game.config.height; i+= 45) {
-            let wallTile = this.physics.add.sprite(game.config.width - 45, i, 'wallTile').setOrigin(0, 0).setScale(0.2);
-            this.walls.add(wallTile);
-        }
+        this.generateRoom();
 
         this.add.text(game.config.width/2, game.config.height/2+32, 'room: ' + this.sceneName).setOrigin(0.5);
+
+        this.events.on('wake', function() {this.wokenUp()}, this);
     }
-    wake() {
+    wokenUp() {
         this.spawnPlayer();
+        console.log("woke");
+        keyLEFT  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyUP    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyDOWN  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
     update() {
-        console.log(this.sceneName);
-        if(Phaser.Input.Keyboard.JustDown(keyRIGHT)){
+        
+        console.log(keyRIGHT.isDown);
+        //console.log(Phaser.Input.Keyboard.JustDown(keyRIGHT));
+        if(keyRIGHT.isDown){
+            console.log("Right");
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right) {
-                this.scene.start(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName, "MADE");
+                //console.log(this.scene.isSleeping(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName));
+                this.scene.sleep(this.sceneName);
+                this.clearKeys();
+                this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName, "MADE");
+                
             }
             else {
                 console.log("no room right");
             } 
             
         }
-        else if(Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        else if(keyLEFT.isDown) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
-                this.scene.start(gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.sceneName, "MADE");
+                this.scene.sleep(this.sceneName);
+                this.clearKeys();
+                this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.sceneName, "MADE");
+                
             }
             else {
                 console.log("no room left");
@@ -68,7 +70,7 @@ class Room extends Phaser.Scene{
         }
         else if(Phaser.Input.Keyboard.JustDown(keyUP)) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
-                this.scene.start(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "MADE");
+                this.scene.switch(this.sceneName, gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "MADE");
             }
             else {
                 console.log("no room up");
@@ -77,7 +79,7 @@ class Room extends Phaser.Scene{
         }
         else if(Phaser.Input.Keyboard.JustDown(keyDOWN)) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down) {
-                this.scene.start(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "MADE");
+                this.scene.switch(this.sceneName, gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "MADE");
             }
             else {
                 console.log("no room down");
@@ -100,7 +102,58 @@ class Room extends Phaser.Scene{
                 return this.doorPos[3];
         }
     }
-    spawnDoor() {
+    generateRoom() {
+        //specify door spawns
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
+            this.doorPos[0] = Math.floor(4 + (Math.random() * 4)) * 45;
+        }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down) {
+            this.doorPos[1] = Math.floor(4 + (Math.random() * 4)) * 45;
+        }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
+            this.doorPos[2] = Math.floor(4 + (Math.random() * 4)) * 45;
+        }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right) {
+            this.doorPos[3] = Math.floor(4 + (Math.random() * 4)) * 45;
+        }
 
+        //generate walls
+        this.walls = this.add.group();
+        for(let i = 0; i < game.config.width; i+= 45) {
+            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up && i == this.doorPos[0]) {
+                i+= 45;
+            }  
+            let wallTile = this.physics.add.sprite(i, 0, 'wallTile').setOrigin(0, 0).setScale(0.2);
+            this.walls.add(wallTile);
+        }
+        for(let i = 0; i < game.config.width; i+= 45) {
+            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up && i == this.doorPos[1]) {
+                i+= 45;
+            }  
+            let wallTile = this.physics.add.sprite(i, game.config.height - 45, 'wallTile').setOrigin(0, 0).setScale(0.2);
+            this.walls.add(wallTile);
+        }
+        for(let i = 0; i < game.config.height; i+= 45) {
+            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up && i == this.doorPos[2]) {
+                i+= 45;
+            }  
+            let wallTile = this.physics.add.sprite(0, i, 'wallTile').setOrigin(0, 0).setScale(0.2);
+            this.walls.add(wallTile);
+        }
+        for(let i = 0; i < game.config.height; i+= 45) {
+            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up && i == this.doorPos[3]) {
+                i+= 45;
+            }  
+            let wallTile = this.physics.add.sprite(game.config.width - 45, i, 'wallTile').setOrigin(0, 0).setScale(0.2);
+            this.walls.add(wallTile);
+        }
+    }
+
+    clearKeys() {
+        this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        
+        this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     }
 }

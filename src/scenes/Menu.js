@@ -44,7 +44,7 @@ class Menu extends Phaser.Scene{
         //console.log(gameRooms.stage1.map[3][3].exits.scene.sceneName);
         //console.log(game.config.scene);
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-            
+            //gameRooms[0].bootRooms();
             this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName, "MADE");
         }
     }

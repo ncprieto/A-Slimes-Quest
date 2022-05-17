@@ -304,5 +304,18 @@ class Map{
             }
         }
     }
+    bootRooms() {
+        for(let i = 0; i < this.rows; i ++){
+            for(let j  = 0; j < this.rows; j ++){
+                if(this.map[i][j] != 0){
+                    if(!this.map[i][j].exits.scene) {
+                        console.log("No scene at" + i + "," + j);
+                    }
+                    this.scene.scene.start(this.map[i][j].exits.scene.sceneName);
+                    this.scene.scene.sleep(this.map[i][j].exits.scene.sceneName);
+                }
+            }
+        }
+    }
 
 }
