@@ -4,8 +4,11 @@ class Menu extends Phaser.Scene{
     }
     preload(){
         this.load.spritesheet('player', './assets/square_slime.png', { frameWidth: 100, frameHeight: 100});
-        this.load.image('wallTile', './assets/wallTile.jpg');
-        this.load.image('door', './assets/doorTemp.png')
+        this.load.image('wallTile', './assets/wallTile.png');
+        this.load.image('door', './assets/doorTemp.png');
+        this.load.image('background', './assets/floor_1.png');
+
+        this.load.audio('move', './assets/select.wav');
     }
     create(){
         
@@ -48,6 +51,9 @@ class Menu extends Phaser.Scene{
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
             //gameRooms[0].bootRooms();
             this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
+        }
+        if(Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.sound.play('move');
         }
     }
     

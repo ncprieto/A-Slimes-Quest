@@ -7,7 +7,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         //private params
-        this.size = 0;
+        this.size = 0.4;
         this.setScale(0.4);
         //
     }
@@ -33,5 +33,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         else {
             this.body.setVelocityY(0);
         }
+
+        //debug change size
+        if(keySPACE.isDown) {
+            this.size -= 0.01
+            this.setScale(this.size);
+        }
+
     }
   }
