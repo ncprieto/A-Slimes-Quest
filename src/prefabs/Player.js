@@ -8,7 +8,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //private params
         this.size = 0.4;
-        this.setScale(0.4);
         //
     }
     update() {

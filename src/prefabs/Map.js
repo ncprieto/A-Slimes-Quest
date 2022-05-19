@@ -18,7 +18,8 @@ class Map{
                 right: false,
                 made: false,
                 scene: null
-            }
+            },
+            type: "START"
         }
         this.curRooms = 1;
         this.generateExits(this.startingrow, this.startingcol);
@@ -111,7 +112,8 @@ class Map{
                     right: false,
                     made: false,
                     scene: null
-                }
+                },
+                type: "NORMAL"
             }
         }
         this.curRooms += 1;
@@ -142,7 +144,8 @@ class Map{
                     right: false,
                     made: false,
                     scene: null
-                }
+                },
+                type: "NORMAL"
             }
         }
         this.curRooms += 1;
@@ -173,7 +176,8 @@ class Map{
                     right: true,
                     made: false,
                     scene: null
-                }
+                },
+                type: "NORMAL"
             }
         }
         this.curRooms += 1;
@@ -205,7 +209,8 @@ class Map{
                     right: false,
                     made: false,
                     scene: null
-                }
+                },
+                type: "NORMAL"
             }
         }
         this.curRooms += 1;
