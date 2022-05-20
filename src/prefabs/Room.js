@@ -39,24 +39,18 @@ class Room extends Phaser.Scene{
         this.physics.add.collider(this.player, this.doors, this.hitDoor, null, this);
 
         //create wake function
-        console.log("HERE");
         this.events.on('wake', function() {this.wake()}, this);
     }
     wake() {
-        console.log("HERE");
         this.spawnPlayer();
         this.clearKeys();
     }
     update() {
-        console.log("HERE");
-        //console.log(this.doorSize[1]);
         if(!this.gameOver) {
             this.player.update();
         }
     }
     spawnPlayer() {
-        console.log("HERE");
-        console.log(this.prevSize);
         this.player.size = this.prevSize;
         this.player.setScale(this.prevSize);
         switch(this.cameFrom){
@@ -249,7 +243,6 @@ class Room extends Phaser.Scene{
                 this.scene.sleep(this.sceneName);
                 gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.cameFrom = "DOWN";
                 gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevSize = this.player.size;
-                console.log(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevSize = this.player.size);
                 this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName);
             }
             else {

@@ -7,6 +7,9 @@ class Map{
         this.startingrow = Math.floor(rows / 2);
         this.startingcol = this.startingrow;
         this.map = Array(this.rows);
+        this.singleRooms = [];
+        this.bossCords = [];                                                // stores coordinates for the boss room for this stage           index 0 and 1 hold boss room index 2 and 3 hold previous room
+        this.puzzleCords = [];                                              // stores coordinates for puzzle and prize rooms for this stage  index 0 and 1 hold prize room index 2 and 3 hold puzzle room
         for(let i = 0; i < this.rows; i++){
             this.map[i] = [0,0,0,0,0];
         }
@@ -19,11 +22,19 @@ class Map{
                 made: false,
                 scene: null
             },
-            type: "START"
+            type: {
+                start: true,
+                normal: false,
+                boss: false,
+                prize: false,
+                puzzle: false
+            }
         }
         this.curRooms = 1;
         this.generateExits(this.startingrow, this.startingcol);
         this.cleanUp();
+        this.makeBossRoom();
+        this.makePuzzleAndPrizeRoom();
         this.generateScenes();
     }
     generateExits(row, col){
@@ -113,14 +124,20 @@ class Map{
                     made: false,
                     scene: null
                 },
-                type: "NORMAL"
+                type: {
+                    start: false,
+                    normal: true,
+                    boss: false,
+                    prize: false,
+                    puzzle: false
+                }
             }
         }
         this.curRooms += 1;
         if(this.curRooms >= this.maxRooms){
             return;
         }
-        if(Math.floor(Math.random() * 4) == 3){             // 1 in 4 chance that we dont make exits for the room at map[row - 1][col]
+        if(Math.floor(Math.random() * 5) == 3){             // 1 in 5 chance that we dont make exits for the room at map[row - 1][col]
             this.map[row - 1][col].exits.made = true;
             return;
         }
@@ -145,14 +162,20 @@ class Map{
                     made: false,
                     scene: null
                 },
-                type: "NORMAL"
+                type: {
+                    start: false,
+                    normal: true,
+                    boss: false,
+                    prize: false,
+                    puzzle: false
+                }
             }
         }
         this.curRooms += 1;
         if(this.curRooms >= this.maxRooms){
             return;
         }
-        if(Math.floor(Math.random() * 4) == 3){
+        if(Math.floor(Math.random() * 5) == 3){
             this.map[row + 1][col].exits.made = true;
             return;
         }
@@ -177,14 +200,20 @@ class Map{
                     made: false,
                     scene: null
                 },
-                type: "NORMAL"
+                type: {
+                    start: false,
+                    normal: true,
+                    boss: false,
+                    prize: false,
+                    puzzle: false
+                }
             }
         }
         this.curRooms += 1;
         if(this.curRooms >= this.maxRooms){
             return;
         }
-        if(Math.floor(Math.random() * 4) == 3){
+        if(Math.floor(Math.random() * 5) == 3){
             this.map[row][col - 1].exits.made = true;
             return;
         }
@@ -210,14 +239,20 @@ class Map{
                     made: false,
                     scene: null
                 },
-                type: "NORMAL"
+                type: {
+                    start: false,
+                    normal: true,
+                    boss: false,
+                    prize: false,
+                    puzzle: false
+                }
             }
         }
         this.curRooms += 1;
         if(this.curRooms >= this.maxRooms){
             return;
         }
-        if(Math.floor(Math.random() * 4) == 3){
+        if(Math.floor(Math.random() * 5) == 3){
             this.map[row][col + 1].exits.made = true;
             return;
         }
@@ -258,8 +293,39 @@ class Map{
                     else{
                         temp += "0";
                     }
+                    //
+                    if(this.map[i][j].type.start){
+                        temp += 's';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].type.normal){
+                        temp += 'n';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].type.prize){
+                        temp += 'p';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].type.puzzle){
+                        temp += 'z';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].type.boss){
+                        temp += 'b';
+                    }
+                    else{
+                        temp += "0";
+                    }
                 }
-                while(temp.length < 4){
+                while(temp.length < 9){
                     temp += '0';
                 }
                 temp += " ";
@@ -268,30 +334,58 @@ class Map{
             console.log(final);
         }
     }
-    
-
     /* cleanUp() pretty much cleans up any parts of the map
      * where two rooms exits do not match
      * if room [2][2] has a left exit then it it ensures that
      * the room at [2][1] has a right exit and so on
+     * also finds rooms that contain a single entrance and exit
+     * and stores the coordinates of that room in this.singleRooms
      */
     cleanUp(){
         for(let i = 0; i < this.rows; i ++){
             for(let j  = 0; j < this.rows; j ++){
+                let exitCount = 0;
+                let before = "";
                 if(this.map[i][j] == 0){
                     continue;
                 }
                 if(this.map[i][j].exits.up){
                     this.map[i - 1][j].exits.down  = true;
+                    exitCount += 1;
+                    before = "down";
                 }
                 if(this.map[i][j].exits.down){
                     this.map[i + 1][j].exits.up  = true;
+                    exitCount += 1;
+                    before = "up";
                 }
                 if(this.map[i][j].exits.left){
                     this.map[i][j - 1].exits.right  = true;
+                    exitCount += 1;
+                    before = "left";
                 }
                 if(this.map[i][j].exits.right){
                     this.map[i][j + 1].exits.left  = true;
+                    exitCount += 1;
+                    before = "right";
+                }
+                if(exitCount == 1){
+                    let tempArr = [i, j]
+                    switch (before){
+                        case "down":
+                            tempArr.push(i - 1, j);
+                            break;
+                        case "up":
+                            tempArr.push(i + 1, j);
+                            break;
+                        case "left":
+                            tempArr.push(i, j - 1);
+                            break;
+                        case "right":
+                            tempArr.push(i, j + 1);
+                            break;
+                    }
+                    this.singleRooms.push(tempArr);
                 }
             }
         }
@@ -300,6 +394,7 @@ class Map{
         for(let i = 0; i < this.rows; i ++){
             for(let j  = 0; j < this.rows; j ++){
                 if(this.map[i][j] != 0){
+                    // COULD ADD PUZZLE CLASS AND BOSS CLASS BASED ON TYPE OF ROOM
                     this.map[i][j].exits.scene = new Room(this.name + "_" + i + j);
                     this.scene.scene.add(this.map[i][j].exits.scene.sceneName, this.map[i][j].exits.scene);
                     if(!this.map[i][j].exits.scene) {
@@ -322,5 +417,33 @@ class Map{
             }
         }
     }
-
+    // finds first room with a singular exit and changes the .type.boss to true
+    makeBossRoom(){
+        let dist = 0;
+        let index;
+        for(let i = 0; i < this.singleRooms.length; i++){
+            let tempDist = Math.sqrt(Math.pow((2 - this.singleRooms[i][0]), 2) + Math.pow((2 - this.singleRooms[i][1]), 2))
+            if(tempDist > dist){
+                dist = tempDist;
+                this.bossCords = this.singleRooms[i];
+                index = i;
+            }
+        }
+        this.singleRooms.splice(index, 1);
+        this.map[this.bossCords[0]][this.bossCords[1]].type.boss = true;
+    }
+    // finds two more single rooms and sets them to puzzle and prize rooms
+    makePuzzleAndPrizeRoom(){
+        if(this.singleRooms[0] != undefined){
+            this.puzzleCords.push(this.singleRooms[0]);
+            this.map[this.singleRooms[0][0]][this.singleRooms[0][1]].type.prize = true;
+            this.map[this.singleRooms[0][2]][this.singleRooms[0][3]].type.puzzle = true;
+        }
+        if(this.singleRooms[1] != undefined){
+            this.puzzleCords.push(this.singleRooms[1]);
+            this.map[this.singleRooms[1][0]][this.singleRooms[1][1]].type.prize = true;
+            this.map[this.singleRooms[1][2]][this.singleRooms[1][3]].type.puzzle = true;
+        }
+        this.singleRooms.splice(0, 2);
+    }
 }

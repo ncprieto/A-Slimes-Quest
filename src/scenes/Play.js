@@ -8,11 +8,9 @@ class Play extends Phaser.Scene{
     }
     create(){
         this.player = new Player(this, 100, 100, 'player', 0).setOrigin(0.5,0.5);
-        
     }
     update(){ 
         console.log(this.scene.settings.data[1]);  
-        //console.log();
         this.player.update();
     }
 }

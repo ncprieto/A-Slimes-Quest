@@ -36,8 +36,11 @@ class Menu extends Phaser.Scene{
         this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to Start', menuConfig).setOrigin(0.5);
 
         //create games
+        console.log('MAKING STAGE 1');
         gameRooms.push(new Map(this, "stage1", 5,20));
+        console.log('MAKING STAGE 2');
         gameRooms.push(new Map(this, "stage2", 5,20));
+        console.log('MAKING STAGE 3');
         gameRooms.push(new Map(this, "stage3", 5,20));
 
         gameRooms[0].printMap();
