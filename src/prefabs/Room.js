@@ -26,6 +26,7 @@ class Room extends Phaser.Scene{
         keyUP    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
         //this.spawnDoor();
 
         //create walls
@@ -213,7 +214,7 @@ class Room extends Phaser.Scene{
                 console.log("no room right");
             } 
         }
-        else if(this.player.body.touching.left) {
+        if(this.player.body.touching.left) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
                 this.scene.sleep(this.sceneName);
                 gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.cameFrom = "LEFT";
@@ -226,24 +227,24 @@ class Room extends Phaser.Scene{
             } 
 
         }
-        else if(this.player.body.touching.up) {
+        if(this.player.body.touching.up) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
                 this.scene.sleep(this.sceneName);
                 gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.cameFrom = "UP";
                 gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevSize = this.player.size;
-                this.scene.run(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName);
+                this.scene.run(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "UP");
             }
             else {
                 console.log("no room up");
             } 
 
         }
-        else if(this.player.body.touching.down) {
+        if(this.player.body.touching.down) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down) {
                 this.scene.sleep(this.sceneName);
                 gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.cameFrom = "DOWN";
                 gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevSize = this.player.size;
-                this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName);
+                this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "DOWN");
             }
             else {
                 console.log("no room down");

@@ -394,8 +394,23 @@ class Map{
         for(let i = 0; i < this.rows; i ++){
             for(let j  = 0; j < this.rows; j ++){
                 if(this.map[i][j] != 0){
+                    if(this.map[i][j].type.puzzle){
+                        this.map[i][j].exits.scene = new Puzzle(this.name + "_" + i + j + "_" + "puzzle");
+                    }
+                    else if(this.map[i][j].type.prize){
+                        this.map[i][j].exits.scene = new Prize(this.name + "_" + i + j + "_" + "prize");
+                    }
+                    else if(this.map[i][j].type.boss){
+                        this.map[i][j].exits.scene = new Boss(this.name + "_" + i + j + "_" + "boss");
+                    }
+                    else if(this.map[i][j].type.start){
+                        this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "start");
+                    }
+                    else{
+                        this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "normal");
+                    }
                     // COULD ADD PUZZLE CLASS AND BOSS CLASS BASED ON TYPE OF ROOM
-                    this.map[i][j].exits.scene = new Room(this.name + "_" + i + j);
+                    
                     this.scene.scene.add(this.map[i][j].exits.scene.sceneName, this.map[i][j].exits.scene);
                     if(!this.map[i][j].exits.scene) {
                         console.log("failed to create room");

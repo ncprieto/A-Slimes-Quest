@@ -8,7 +8,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //private params
         this.size = 0.4;
-        //
+        this.consumed = 0;
     }
     update() {
         //left right movement
@@ -35,9 +35,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //debug change size
         if(keySPACE.isDown) {
-            this.size -= 0.01
-            this.setScale(this.size);
+            if(this.size > 0.1){
+                this.size -= 0.01
+                this.setScale(this.size);
+            }
         }
-
     }
   }
