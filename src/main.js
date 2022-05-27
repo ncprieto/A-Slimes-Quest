@@ -19,4 +19,4 @@ let room = {
 }
 let gameRooms = [];
 let game = new Phaser.Game(config);
-let keyRIGHT, keyLEFT, keyUP, keyDOWN, keySPACE;
+let keyC, keyRIGHT, keyLEFT, keyUP, keyDOWN, keySPACE;
