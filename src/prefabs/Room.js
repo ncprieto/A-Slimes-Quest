@@ -13,6 +13,7 @@ class Room extends Phaser.Scene{
         this.stageNum = parseInt(name.substring(5, name.indexOf('_'))) - 1;
         this.doorPos = [0,0,0,0];
         this.doorSize = [0,0,0,0];
+        this.doors = [0,0,0,0];
 
         //some fields
         this.gameOver = false;
@@ -37,7 +38,11 @@ class Room extends Phaser.Scene{
         this.player = new Player(this, 0,0, 'player').setOrigin(0.5, 0.5);
         this.spawnPlayer();
         this.physics.add.collider(this.player, this.walls);
-        this.physics.add.collider(this.player, this.doors, this.hitDoor, null, this);
+        //this.physics.add.collider(this.player, this.doors, this.hitDoor, null, this);
+        this.physics.add.collider(this.player, this.doors[0], this.hitDoorUp, null, this);
+        this.physics.add.collider(this.player, this.doors[1], this.hitDoorDown, null, this);
+        this.physics.add.collider(this.player, this.doors[2], this.hitDoorLeft, null, this);
+        this.physics.add.collider(this.player, this.doors[3], this.hitDoorRight, null, this);
 
         //create wake function
         this.events.on('wake', function() {this.wake()}, this);
@@ -47,6 +52,7 @@ class Room extends Phaser.Scene{
         this.clearKeys();
     }
     update() {
+        console.log(this.sceneName);
         if(!this.gameOver) {
             this.player.update();
         }
@@ -81,7 +87,7 @@ class Room extends Phaser.Scene{
     generateRoom() {
         this.wallSize = 48;
         this.wallScale = 0.75;
-        this.background = this.add.image(0,0, 'background').setOrigin(0,0);
+        //this.background = this.add.image(0,0, 'background').setOrigin(0,0);
 
         //specify door spawns
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
@@ -139,7 +145,8 @@ class Room extends Phaser.Scene{
                 this.walls.add(doorSide2);
                 let door = this.physics.add.sprite(i, -24, 'door').setOrigin(0, 0);
                 door.body.immovable = true;
-                this.doors.add(door);
+                //this.doors.add(door);
+                this.doors[0] = door;
                 i += this.wallSize;
             }  
             let wallTile = this.physics.add.sprite(i, 0, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
@@ -156,7 +163,7 @@ class Room extends Phaser.Scene{
                 this.walls.add(doorSide2);
                 let door = this.physics.add.sprite(i, game.config.height - this.wallSize/2, 'door').setOrigin(0, 0);
                 door.body.immovable = true;
-                this.doors.add(door);
+                this.doors[1] = door;
                 i+= this.wallSize;
             }  
             let wallTile = this.physics.add.sprite(i, game.config.height - this.wallSize, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
@@ -173,7 +180,7 @@ class Room extends Phaser.Scene{
                 this.walls.add(doorSide2);
                 let door = this.physics.add.sprite(-24, i, 'door').setOrigin(0, 0);
                 door.body.immovable = true;
-                this.doors.add(door);
+                this.doors[2] = door;
                 i+= this.wallSize;
             }  
             let wallTile = this.physics.add.sprite(0, i, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
@@ -190,7 +197,7 @@ class Room extends Phaser.Scene{
                 this.walls.add(doorSide2);
                 let door = this.physics.add.sprite(game.config.width - this.wallSize/2, i, 'door').setOrigin(0, 0);
                 door.body.immovable = true;
-                this.doors.add(door);
+                this.doors[3] = door;
                 i+= this.wallSize;
             }  
             let wallTile = this.physics.add.sprite(game.config.width - this.wallSize, i, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
@@ -198,59 +205,57 @@ class Room extends Phaser.Scene{
             this.walls.add(wallTile);
         }
     }
-    //Collision Functions
-    hitDoor() {
+    hitDoorUp() {
         this.sound.play('move');
-        //determine which door player is going through
-        if(this.player.body.touching.right){
-            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right) {
-                this.scene.sleep(this.sceneName);
-                gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.cameFrom = "RIGHT";
-                gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevSize = this.player.size;
-                this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName, "RIGHT");
-                
-            }
-            else {
-                console.log("no room right");
-            } 
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
+            this.scene.sleep(this.sceneName);
+            gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.cameFrom = "UP";
+            gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevSize = this.player.size;
+            this.scene.run(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "UP");
         }
-        if(this.player.body.touching.left) {
-            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
-                this.scene.sleep(this.sceneName);
-                gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.cameFrom = "LEFT";
-                gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevSize = this.player.size;
-                this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.sceneName, "LEFT");
-                
-            }
-            else {
-                console.log("no room left");
-            } 
-
-        }
-        if(this.player.body.touching.up) {
-            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
-                this.scene.sleep(this.sceneName);
-                gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.cameFrom = "UP";
-                gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevSize = this.player.size;
-                this.scene.run(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "UP");
-            }
-            else {
-                console.log("no room up");
-            } 
-
-        }
-        if(this.player.body.touching.down) {
-            if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down) {
-                this.scene.sleep(this.sceneName);
-                gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.cameFrom = "DOWN";
-                gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevSize = this.player.size;
-                this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "DOWN");
-            }
-            else {
-                console.log("no room down");
-            } 
+        else {
+            console.log("no room up");
         }
     }
+    hitDoorDown() {
+        this.sound.play('move');
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down) {
+            this.scene.sleep(this.sceneName);
+            gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.cameFrom = "DOWN";
+            gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevSize = this.player.size;
+            this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "DOWN");
+        }
+        else {
+            console.log("no room down");
+        } 
+    }
+    hitDoorLeft() {
+        this.sound.play('move');
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
+            this.scene.sleep(this.sceneName);
+            gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.cameFrom = "LEFT";
+            gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevSize = this.player.size;
+            this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.sceneName, "LEFT");
+            
+        }
+        else {
+            console.log("no room left");
+        } 
+    }
+    hitDoorRight() {
+        this.sound.play('move');
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right) {
+            this.scene.sleep(this.sceneName);
+            gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.cameFrom = "RIGHT";
+            gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevSize = this.player.size;
+            this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName, "RIGHT");
+            
+        }
+        else {
+            console.log("no room right");
+        } 
+    }  
+        
 
     //Scene Clean Up
     clearKeys() {
