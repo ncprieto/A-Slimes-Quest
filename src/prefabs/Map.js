@@ -10,6 +10,7 @@ class Map{
         this.singleRooms = [];
         this.bossCords = [];                                                // stores coordinates for the boss room for this stage           index 0 and 1 hold boss room index 2 and 3 hold previous room
         this.puzzleCords = [];                                              // stores coordinates for puzzle and prize rooms for this stage  index 0 and 1 hold prize room index 2 and 3 hold puzzle room
+        this.puzzleTypes = ["puzzle1", "puzzle2", "puzzle3", "puzzle4"];
         for(let i = 0; i < this.rows; i++){
             this.map[i] = [0,0,0,0,0];
         }
@@ -395,7 +396,34 @@ class Map{
             for(let j  = 0; j < this.rows; j ++){
                 if(this.map[i][j] != 0){
                     if(this.map[i][j].type.puzzle){
-                        this.map[i][j].exits.scene = new Puzzle(this.name + "_" + i + j + "_" + "puzzle");
+                        let prizeY;
+                        let prizeX;
+                        for(let g = 0; g < this.puzzleCords.length; g ++){
+                            if(i == this.puzzleCords[g][2] && j == this.puzzleCords[g][3]){
+                                prizeX = this.puzzleCords[g][1];
+                                prizeY = this.puzzleCords[g][0];
+                            }
+                        }
+                        let index = Math.floor(Math.random() * this.puzzleTypes.length);
+                        switch(this.puzzleTypes[index]){
+                            case "puzzle1":
+                                console.log("MAKING PUZZLE ONE");
+                                this.map[i][j].exits.scene = new Puzzle1(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                break;
+                            case "puzzle2":
+                                console.log("MAKING  PUZZLE TWO");
+                                this.map[i][j].exits.scene = new Puzzle2(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                break;
+                            case "puzzle3":
+                                console.log("MAKING OPUZZLE THREE");
+                                this.map[i][j].exits.scene = new Puzzle3(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                break;
+                            case "puzzle4":
+                                console.log("MAKING PUZZLE FOUR");
+                                this.map[i][j].exits.scene = new Puzzle4(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                break;
+                        }
+                        this.puzzleTypes.splice(index, 1);
                     }
                     else if(this.map[i][j].type.prize){
                         this.map[i][j].exits.scene = new Prize(this.name + "_" + i + j + "_" + "prize");

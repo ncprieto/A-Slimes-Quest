@@ -56,6 +56,9 @@ class Room extends Phaser.Scene{
         if(!this.gameOver) {
             this.player.update();
         }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.puzzle){
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos);
+        }
     }
     spawnPlayer() {
         this.player.size = this.prevSize;

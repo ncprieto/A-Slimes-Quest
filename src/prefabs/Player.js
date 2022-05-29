@@ -9,6 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //private params
         this.size = 0.4;
         this.consumed = 0;
+
     }
     update() {
         //left right movement

@@ -6,12 +6,16 @@ class Menu extends Phaser.Scene{
         this.load.spritesheet('player', './assets/square_slime.png', { frameWidth: 100, frameHeight: 100});
         this.load.image('wallTile', './assets/wallTile.png');
         this.load.image('door', './assets/doorTemp.png');
-        this.load.image('background', './assets/floor_1.png');
+        this.load.image('background', './assets/floor_1.png')
+        this.load.spritesheet('moveRight', './assets/slime_animation_right.png', {frameWidth: 150, frameHeight: 125});
+        this.load.spritesheet('moveLeft', './assets/slime_animation_left.png', {frameWidth: 150, frameHeight: 125});
 
         this.load.audio('move', './assets/select.wav');
     }
     create(){
-        
+        this.anims.create({key: 'walkRight', frames: this.anims.generateFrameNumbers('moveRight', {start:0, end: 4}), frameRate: 10, repeat: -1});
+        this.anims.create({key: 'walkLeft',  frames: this.anims.generateFrameNumbers('moveLeft',  {start:0, end: 4}), frameRate: 10, repeat: -1});
+
         //keyboard inputs
         keyLEFT  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
