@@ -43,6 +43,7 @@ class Normal extends Room{
                 enemy.type = enemyType;
                 enemy.setVelocityX(enemy.speedX);
                 this.enemies.push(enemy);
+                enemy.play(enemy.type + 'Move');
                 this.physics.add.collider(this.player, this.enemies[i], this.hitEnemy, null, this);
 
                 this.numEnemies ++;
@@ -85,12 +86,14 @@ class Normal extends Room{
                 case 'slime':
                     if(enemy.x > enemy.ogX + 200 || enemy.body.touching.right) {
                         enemy.speedX *= -1;
+                        enemy.flipX = !enemy.flipX;
                         enemy.x = enemy.x - 5;
                         enemy.setVelocityX(enemy.speedX);
                     }
                     else if(enemy.x < enemy.ogX - 200 || enemy.body.touching.left) {
                         enemy.speedX *= -1;
                         enemy.x = enemy.x + 5;
+                        enemy.flipX = !enemy.flipX;
                         enemy.setVelocityX(enemy.speedX);
                     }
                     break;
