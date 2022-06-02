@@ -87,7 +87,7 @@ class Room extends Phaser.Scene{
             }
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.puzzle){
-            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos);
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos, this.background);
             this.normalUpdate();
         }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){
