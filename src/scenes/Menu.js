@@ -26,6 +26,12 @@ class Menu extends Phaser.Scene{
     }
     create(){
 
+        //clear gameRooms for reset
+        for(let i = gameRooms.length - 1; i >= 0; i--) {
+            gameRooms[i].delete();
+            gameRooms.pop();
+        }
+
         //game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.anims.create({key: 'walkStart', frames: this.anims.generateFrameNumbers('moveRight', {start:0, end: 1}), frameRate: 10, repeat: 0});

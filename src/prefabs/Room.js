@@ -54,6 +54,20 @@ class Room extends Phaser.Scene{
 
         //create wake function
         this.events.on('wake', function() {this.wake()}, this);
+        //game over
+        let menuConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#87ceeb',
+            color: '#000000',
+            align: 'right',
+            padding: {
+            top: 5,
+            bottom: 5,
+            },
+            fixedWidth: 0
+        }
+        this.gameOverText = this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to return to menu', menuConfig).setOrigin(0.5).setAlpha(0);
     }
     wake() {
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal && this.numEnemies == 0){
@@ -66,6 +80,12 @@ class Room extends Phaser.Scene{
         //console.log(this.sceneName);
         if(!this.gameOver) {
             this.player.update();
+        }
+        else {
+            this.gameOverText.alpha = 1;
+            if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+                this.scene.start("menuScene");
+            }
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.puzzle){
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos);

@@ -1,6 +1,8 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
+
+        this.scene = scene;
     
         // add object to existing scene
         scene.add.existing(this)
@@ -106,6 +108,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.emitter.emitParticle(5);
             this.size -= 0.1;
             this.wasHit = 5;
+            if(this.size <= 0) {
+                this.size = 0;
+                this.scene.gameOver = true;
+                this.emitter.explode(300, this.x, this.y);
+            }
         }
     }
   }
