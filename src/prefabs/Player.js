@@ -18,14 +18,24 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             scale: { min: 0.1, max: 0.3 },
             speed:200,
             quantity: 4,
-            lifespan: 500   
+            lifespan: 300   
         });
         this.emitter.setScale(0.1);
         this.emitter.stop();
         this.emitter.setSpeed(200);
 
+        this.wasHit = 0;
+
     }
     update() {
+        if(this.wasHit > 0) {
+            this.wasHit -= 0.1;
+            this.alpha = 0.5 * Math.sin(this.wasHit * 4) + 0.5;
+        }
+        else {
+            this.alpha = 1;
+            this.wasHit = 0;
+        }
         //left right movement
         if(Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.flipX = true;
@@ -90,10 +100,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     hit() {
-        this.emitter.setPosition(this.x, this.y);
-        this.emitter.emitParticle(4);
-        this.emitter.emitParticle(5);
-        this.emitter.emitParticle(4);
-        //this.emitter.emitParticle(10);
+        if(this.wasHit == 0) {
+            this.emitter.setPosition(this.x, this.y);
+            this.emitter.emitParticle(4);
+            this.emitter.emitParticle(5);
+            this.size -= 0.1;
+            this.wasHit = 5;
+        }
     }
   }
