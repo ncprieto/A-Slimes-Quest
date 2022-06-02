@@ -3,18 +3,34 @@ class Menu extends Phaser.Scene{
         super("menuScene");
     }
     preload(){
-        this.load.spritesheet('player', './assets/square_slime.png', { frameWidth: 100, frameHeight: 100});
+        this.load.spritesheet('player', './assets/slime_animation_right.png', { frameWidth: 150, frameHeight: 125});
         this.load.image('wallTile', './assets/wallTile.png');
         this.load.image('door', './assets/doorTemp.png');
-        this.load.image('background', './assets/floor_1.png')
+        this.load.image('background', './assets/floor_1.png');
+        
+
+        this.load.audio('move', './assets/select.wav');
+
+        //player sprites and animation
         this.load.spritesheet('moveRight', './assets/slime_animation_right.png', {frameWidth: 150, frameHeight: 125});
         this.load.spritesheet('moveLeft', './assets/slime_animation_left.png', {frameWidth: 150, frameHeight: 125});
 
-        this.load.audio('move', './assets/select.wav');
+        //enemies
+        this.load.spritesheet('slime', './assets/weapon_blob_animation.png', {frameWidth: 125, frameHeight: 125});
+        this.load.spritesheet('bat', './assets/flying_eye_animation.png', {frameWidth: 250, frameHeight: 125});
+        this.load.spritesheet('skull', './assets/skull_enemy_animation.png', {frameWidth: 100, frameHeight: 100});
+        this.load.image('warning', './assets/warning.png');
+
+
     }
     create(){
-        this.anims.create({key: 'walkRight', frames: this.anims.generateFrameNumbers('moveRight', {start:0, end: 4}), frameRate: 10, repeat: -1});
-        this.anims.create({key: 'walkLeft',  frames: this.anims.generateFrameNumbers('moveLeft',  {start:0, end: 4}), frameRate: 10, repeat: -1});
+
+        //game.physics.startSystem(Phaser.Physics.ARCADE);
+
+        this.anims.create({key: 'walkStart', frames: this.anims.generateFrameNumbers('moveRight', {start:0, end: 1}), frameRate: 10, repeat: 0});
+        this.anims.create({key: 'walkDuring', frames: this.anims.generateFrameNumbers('moveRight', {start:1, end: 3}), frameRate: 10, repeat: -1});
+        //this.anims.create({key: 'walkLeftStart', frames: this.anims.generateFrameNumbers('moveLeft', {start:1, end: 1}), frameRate: 10, repeat: 0});
+        //this.anims.create({key: 'walkLeftDuring', frames: this.anims.generateFrameNumbers('moveLeft', {start:1, end: 3}), frameRate: 10, repeat: -1})
 
         //keyboard inputs
         keyLEFT  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -22,6 +38,7 @@ class Menu extends Phaser.Scene{
         keyUP    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyF     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
 
 
         let menuConfig = {

@@ -17,8 +17,10 @@ class Room extends Phaser.Scene{
 
         //some fields
         this.gameOver = false;
-
-        this.prevSize = 0.4;
+        this.prevData = {
+            prevSize: 0.4,
+            prevPowerUp: null
+        }
     }
     create() {
         //Keyboard Setup
@@ -48,21 +50,27 @@ class Room extends Phaser.Scene{
         this.events.on('wake', function() {this.wake()}, this);
     }
     wake() {
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal && gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.numEnemies == 0){
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.made = false;
+        }
         this.spawnPlayer();
         this.clearKeys();
     }
     update() {
-        console.log(this.sceneName);
+        //console.log(this.sceneName);
         if(!this.gameOver) {
             this.player.update();
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.puzzle){
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos);
         }
+        else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.normalUpdate();
+        }
     }
     spawnPlayer() {
-        this.player.size = this.prevSize;
-        this.player.setScale(this.prevSize);
+        this.player.size = this.prevData.prevSize;
+        this.player.setScale(this.prevData.prevSize);
         switch(this.cameFrom){
             case "UP":
                 this.player.x = this.doorPos[1] + 22.5;
@@ -137,7 +145,7 @@ class Room extends Phaser.Scene{
 
         //generate walls
         this.walls = this.add.group();
-        this.doors = this.add.group();
+        //this.doors = this.add.group();
         for(let i = 0; i < game.config.width; i+= this.wallSize) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up && i == this.doorPos[0]) {
                 let doorSide1 = this.physics.add.sprite(i + this.wallSize/2 + this.doorSize[0], 0, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
@@ -213,7 +221,7 @@ class Room extends Phaser.Scene{
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.cameFrom = "UP";
-            gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevData.prevSize = this.player.size;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "UP");
         }
         else {
@@ -225,7 +233,7 @@ class Room extends Phaser.Scene{
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down) {
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.cameFrom = "DOWN";
-            gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevData.prevSize = this.player.size;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "DOWN");
         }
         else {
@@ -237,7 +245,7 @@ class Room extends Phaser.Scene{
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.cameFrom = "LEFT";
-            gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevData.prevSize = this.player.size;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.sceneName, "LEFT");
             
         }
@@ -250,7 +258,7 @@ class Room extends Phaser.Scene{
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right) {
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.cameFrom = "RIGHT";
-            gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevData.prevSize = this.player.size;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName, "RIGHT");
             
         }

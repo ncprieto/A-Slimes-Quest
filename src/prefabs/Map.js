@@ -435,7 +435,7 @@ class Map{
                         this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "start");
                     }
                     else{
-                        this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "normal");
+                        this.map[i][j].exits.scene = new Normal(this.name + "_" + i + j + "_" + "normal");
                     }
                     // COULD ADD PUZZLE CLASS AND BOSS CLASS BASED ON TYPE OF ROOM
                     
