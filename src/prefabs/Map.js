@@ -478,7 +478,7 @@ class Map{
                         this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "start");
                     }
                     else{
-                        this.map[i][j].exits.scene = new Normal(this.name + "_" + i + j + "_" + "normal");
+                        this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "normal");
                     }
                     // COULD ADD PUZZLE CLASS AND BOSS CLASS BASED ON TYPE OF ROOM
                     
@@ -531,5 +531,20 @@ class Map{
             this.map[this.singleRooms[1][2]][this.singleRooms[1][3]].type.puzzle = true;
         }
         this.singleRooms.splice(0, 2);
+    }
+
+    delete() {
+        for(let i = 0; i < this.rows; i ++){
+            for(let j  = 0; j < this.rows; j ++){
+                if(this.map[i][j] != 0){
+                    if(!this.map[i][j].exits.scene) {
+                        console.log("No scene at" + i + "," + j);
+                    }
+                    else {
+                        this.scene.scene.remove(this.map[i][j].exits.scene.sceneName);
+                    }
+                }
+            }
+        }
     }
 }
