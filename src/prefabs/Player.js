@@ -12,6 +12,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.animPlayed = false;
 
+        var particles = this.scene.add.particles('damage');
+        this.emitter = particles.createEmitter( {
+            angle: {min: 240, max: 300},
+            scale: { min: 0.1, max: 0.3 },
+            speed:200,
+            quantity: 4,
+            lifespan: 500   
+        });
+        this.emitter.setScale(0.1);
+        this.emitter.stop();
+        this.emitter.setSpeed(200);
+
     }
     update() {
         //left right movement
@@ -75,5 +87,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.size += 0.01
         }
         this.setScale(this.size);
+    }
+
+    hit() {
+        this.emitter.setPosition(this.x, this.y);
+        this.emitter.emitParticle(4);
+        this.emitter.emitParticle(5);
+        this.emitter.emitParticle(4);
+        //this.emitter.emitParticle(10);
     }
   }

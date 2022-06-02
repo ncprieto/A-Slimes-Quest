@@ -14,6 +14,7 @@ class Menu extends Phaser.Scene{
         //player sprites and animation
         this.load.spritesheet('moveRight', './assets/slime_animation_right.png', {frameWidth: 150, frameHeight: 125});
         this.load.spritesheet('moveLeft', './assets/slime_animation_left.png', {frameWidth: 150, frameHeight: 125});
+        this.load.image('damage', './assets/damage.png');
 
         //enemies
         this.load.spritesheet('slime', './assets/weapon_blob_animation.png', {frameWidth: 125, frameHeight: 125});
