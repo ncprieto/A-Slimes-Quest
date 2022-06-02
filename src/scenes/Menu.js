@@ -26,6 +26,7 @@ class Menu extends Phaser.Scene{
         //player sprites and animation
         this.load.spritesheet('moveRight', './assets/slime_animation_right.png', {frameWidth: 150, frameHeight: 125});
         this.load.spritesheet('moveLeft', './assets/slime_animation_left.png', {frameWidth: 150, frameHeight: 125});
+        this.load.image('damage', './assets/damage.png');
 
         //enemies
         this.load.spritesheet('slime', './assets/weapon_blob_animation.png', {frameWidth: 125, frameHeight: 125});
@@ -37,10 +38,19 @@ class Menu extends Phaser.Scene{
     }
     create(){
 
+        //clear gameRooms for reset
+        for(let i = gameRooms.length - 1; i >= 0; i--) {
+            gameRooms[i].delete();
+            gameRooms.pop();
+        }
+
         //game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.anims.create({key: 'walkStart', frames: this.anims.generateFrameNumbers('moveRight', {start:0, end: 1}), frameRate: 10, repeat: 0});
         this.anims.create({key: 'walkDuring', frames: this.anims.generateFrameNumbers('moveRight', {start:1, end: 3}), frameRate: 10, repeat: -1});
+        this.anims.create({key: 'slimeMove', frames: this.anims.generateFrameNumbers('slime', {start:0, end: 3}), frameRate: 10, repeat: -1});
+        this.anims.create({key: 'skullMove', frames: this.anims.generateFrameNumbers('skull', {start:0, end: 3}), frameRate: 10, repeat: -1});
+        this.anims.create({key: 'batMove', frames: this.anims.generateFrameNumbers('bat', {start:0, end: 4}), frameRate: 10, repeat: -1});
         //this.anims.create({key: 'walkLeftStart', frames: this.anims.generateFrameNumbers('moveLeft', {start:1, end: 1}), frameRate: 10, repeat: 0});
         //this.anims.create({key: 'walkLeftDuring', frames: this.anims.generateFrameNumbers('moveLeft', {start:1, end: 3}), frameRate: 10, repeat: -1})
 
