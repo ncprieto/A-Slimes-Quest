@@ -44,6 +44,7 @@ class Room extends Phaser.Scene{
         this.add.text(game.config.width/2, game.config.height/2+32, 'room: ' + this.sceneName).setOrigin(0.5);
 
         this.player = new Player(this, 0,0, 'player').setOrigin(0.5, 0.5);
+        this.player.body.setSize(100, 100)
         this.spawnPlayer();
         this.physics.add.collider(this.player, this.walls);
         //this.physics.add.collider(this.player, this.doors, this.hitDoor, null, this);
@@ -54,6 +55,7 @@ class Room extends Phaser.Scene{
 
         //create wake function
         this.events.on('wake', function() {this.wake()}, this);
+        
         //game over
         let menuConfig = {
             fontFamily: 'Courier',
@@ -68,6 +70,21 @@ class Room extends Phaser.Scene{
             fixedWidth: 0
         }
         this.gameOverText = this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to return to menu', menuConfig).setOrigin(0.5).setAlpha(0);
+
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.start) {
+            this.boxes = this.add.group();
+            let bigBox =    this.physics.add.sprite(350, 200, 'startBox').setScale(2);
+            bigBox.tag = 'big';
+            bigBox.body.immovable = true;
+            let smallBox =  this.physics.add.sprite(950, 200, 'startBox').setScale(2);
+            smallBox.flipY = true;
+            smallBox.tag = 'small';
+            smallBox.body.immovable = true;
+            this.boxes.add(bigBox);
+            this.boxes.add(smallBox);
+            this.physics.add.collider(this.player, this.boxes, this.startCol, null, this);
+
+        }
     }
     wake() {
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal && this.numEnemies == 0){
@@ -438,6 +455,7 @@ class Room extends Phaser.Scene{
             }
         }
     }
+    //collision between enemy and player
     hitEnemy(player, enemy) {
         if(player.size > enemy.size) {
             this.enemies[enemy.number] = null;
@@ -452,4 +470,9 @@ class Room extends Phaser.Scene{
         }
         
     }
+    //collision with starting boxes
+    startCol(player, box) {
+        player.hitBox(box.tag);
+    }
+
 }
