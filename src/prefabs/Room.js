@@ -94,7 +94,6 @@ class Room extends Phaser.Scene{
         this.clearKeys();
     }
     update() {
-        //console.log(this.sceneName);
         if(!this.gameOver) {
             this.player.update();
         }
@@ -105,7 +104,7 @@ class Room extends Phaser.Scene{
             }
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.puzzle){
-            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos);
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos, this.background);
             this.normalUpdate();
         }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){
@@ -143,7 +142,18 @@ class Room extends Phaser.Scene{
         this.wallSize = 48;
         this.wallScale = 0.75;
         //this.background = this.add.image(0,0, 'background').setOrigin(0,0);
-
+        let wallStr;
+        let doorStr;
+        if(this.stageNum == 0){
+            wallStr = 'walltile_stage1';
+            doorStr = 'door_stage1';
+            this.background = this.add.image(0,0, 'background_stage1').setOrigin(0,0);
+        }
+        else if(this.stageNum == 1){
+            wallStr = 'walltile_stage2';
+            doorStr = 'door_stage2';
+            this.background = this.add.image(0,0, 'background_stage2').setOrigin(0,0);
+        }
         //specify door spawns
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up) {
             if(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.doorPos[1] != 0) {
@@ -192,72 +202,72 @@ class Room extends Phaser.Scene{
         //this.doors = this.add.group();
         for(let i = 0; i < game.config.width; i+= this.wallSize) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.up && i == this.doorPos[0]) {
-                let doorSide1 = this.physics.add.sprite(i + this.wallSize/2 + this.doorSize[0], 0, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-                let doorSide2 = this.physics.add.sprite(i + this.wallSize/2 - this.doorSize[0], 0, 'wallTile').setOrigin(1, 0).setScale(this.wallScale);
+                let doorSide1 = this.physics.add.sprite(i + this.wallSize/2 + this.doorSize[0], 0, wallStr).setOrigin(0, 0).setScale(this.wallScale);
+                let doorSide2 = this.physics.add.sprite(i + this.wallSize/2 - this.doorSize[0], 0, wallStr).setOrigin(1, 0).setScale(this.wallScale);
                 doorSide1.body.immovable = true;
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(i, -24, 'door').setOrigin(0, 0);
+                let door = this.physics.add.sprite(i, -24, doorStr).setOrigin(0, 0);
                 door.body.immovable = true;
                 //this.doors.add(door);
                 this.doors[0] = door;
                 i += this.wallSize;
             }  
-            let wallTile = this.physics.add.sprite(i, 0, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-            wallTile.body.immovable = true;
-            this.walls.add(wallTile);
+            let walltile_stage1 = this.physics.add.sprite(i, 0, wallStr).setOrigin(0, 0).setScale(this.wallScale);
+            walltile_stage1.body.immovable = true;
+            this.walls.add(walltile_stage1);
         }
         for(let i = 0; i < game.config.width; i+= this.wallSize) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.down && i == this.doorPos[1]) {
-                let doorSide1 = this.physics.add.sprite(i + this.wallSize/2 + this.doorSize[1], game.config.height - this.wallSize, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-                let doorSide2 = this.physics.add.sprite(i + this.wallSize/2 - this.doorSize[1], game.config.height - this.wallSize, 'wallTile').setOrigin(1, 0).setScale(this.wallScale);
+                let doorSide1 = this.physics.add.sprite(i + this.wallSize/2 + this.doorSize[1], game.config.height - this.wallSize, wallStr).setOrigin(0, 0).setScale(this.wallScale);
+                let doorSide2 = this.physics.add.sprite(i + this.wallSize/2 - this.doorSize[1], game.config.height - this.wallSize, wallStr).setOrigin(1, 0).setScale(this.wallScale);
                 doorSide1.body.immovable = true;
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(i, game.config.height - this.wallSize/2, 'door').setOrigin(0, 0);
+                let door = this.physics.add.sprite(i, game.config.height - this.wallSize/2, doorStr).setOrigin(0, 0);
                 door.body.immovable = true;
                 this.doors[1] = door;
                 i+= this.wallSize;
             }  
-            let wallTile = this.physics.add.sprite(i, game.config.height - this.wallSize, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-            wallTile.body.immovable = true;
-            this.walls.add(wallTile);
+            let walltile_stage1 = this.physics.add.sprite(i, game.config.height - this.wallSize, wallStr).setOrigin(0, 0).setScale(this.wallScale);
+            walltile_stage1.body.immovable = true;
+            this.walls.add(walltile_stage1);
         }
         for(let i = 0; i < game.config.height; i+= this.wallSize) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left && i == this.doorPos[2]) {
-                let doorSide1 = this.physics.add.sprite(0, i + this.wallSize/2 + this.doorSize[2], 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-                let doorSide2 = this.physics.add.sprite(0, i + this.wallSize/2 - this.doorSize[2], 'wallTile').setOrigin(0, 1).setScale(this.wallScale);
+                let doorSide1 = this.physics.add.sprite(0, i + this.wallSize/2 + this.doorSize[2], wallStr).setOrigin(0, 0).setScale(this.wallScale);
+                let doorSide2 = this.physics.add.sprite(0, i + this.wallSize/2 - this.doorSize[2], wallStr).setOrigin(0, 1).setScale(this.wallScale);
                 doorSide1.body.immovable = true;
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(-24, i, 'door').setOrigin(0, 0);
+                let door = this.physics.add.sprite(-24, i, doorStr).setOrigin(0, 0);
                 door.body.immovable = true;
                 this.doors[2] = door;
                 i+= this.wallSize;
             }  
-            let wallTile = this.physics.add.sprite(0, i, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-            wallTile.body.immovable = true;
-            this.walls.add(wallTile);
+            let walltile_stage1 = this.physics.add.sprite(0, i, wallStr).setOrigin(0, 0).setScale(this.wallScale);
+            walltile_stage1.body.immovable = true;
+            this.walls.add(walltile_stage1);
         }
         for(let i = 0; i < game.config.height; i+= this.wallSize) {
             if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right && i == this.doorPos[3]) {
-                let doorSide1 = this.physics.add.sprite(game.config.width - this.wallSize, i + this.wallSize/2 + this.doorSize[3], 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-                let doorSide2 = this.physics.add.sprite(game.config.width - this.wallSize, i + this.wallSize/2 - this.doorSize[3], 'wallTile').setOrigin(0, 1).setScale(this.wallScale);
+                let doorSide1 = this.physics.add.sprite(game.config.width - this.wallSize, i + this.wallSize/2 + this.doorSize[3], wallStr).setOrigin(0, 0).setScale(this.wallScale);
+                let doorSide2 = this.physics.add.sprite(game.config.width - this.wallSize, i + this.wallSize/2 - this.doorSize[3], wallStr).setOrigin(0, 1).setScale(this.wallScale);
                 doorSide1.body.immovable = true;
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(game.config.width - this.wallSize/2, i, 'door').setOrigin(0, 0);
+                let door = this.physics.add.sprite(game.config.width - this.wallSize/2, i, doorStr).setOrigin(0, 0);
                 door.body.immovable = true;
                 this.doors[3] = door;
                 i+= this.wallSize;
             }  
-            let wallTile = this.physics.add.sprite(game.config.width - this.wallSize, i, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
-            wallTile.body.immovable = true;
-            this.walls.add(wallTile);
+            let walltile_stage1 = this.physics.add.sprite(game.config.width - this.wallSize, i, wallStr).setOrigin(0, 0).setScale(this.wallScale);
+            walltile_stage1.body.immovable = true;
+            this.walls.add(walltile_stage1);
         }
     }
     hitDoorUp() {

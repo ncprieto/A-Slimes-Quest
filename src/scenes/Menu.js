@@ -3,13 +3,26 @@ class Menu extends Phaser.Scene{
         super("menuScene");
     }
     preload(){
-        this.load.spritesheet('player', './assets/slime_animation_right.png', { frameWidth: 150, frameHeight: 125});
-        this.load.image('wallTile', './assets/wallTile.png');
-        this.load.image('door', './assets/doorTemp.png');
-        this.load.image('background', './assets/floor_1.png');
+        // STAGE 1 ASSETS
+        this.load.image('background_stage1', './assets/floor_1.png');
+        this.load.image('walltile_stage1', './assets/wall_1.png');
+        this.load.image('door_stage1', './assets/door_1.png');
+        this.load.image('puzzle1_floor_stage1', './assets/floor_1_pzl_a.png');
+        this.load.image('puzzle2_floor_stage1', './assets/floor_1_pzl_b.png');
+        this.load.image('puzzle_piece_stage1', './assets/key_tile_1.png');
         
         this.load.image('startBox', './assets/start.png');
 
+        // STAGE 2 ASSETS
+        this.load.image('background_stage2', './assets/floor_2.png');
+        this.load.image('walltile_stage2', './assets/wall_2.png');
+        this.load.image('door_stage2', './assets/door_2.png');
+        this.load.image('puzzle1_floor_stage2', './assets/floor_2_pzl_a.png');
+        this.load.image('puzzle2_floor_stage2', './assets/floor_2_pzl_b.png');
+        this.load.image('puzzle_piece_stage2', './assets/key_tile_2.png');
+        
+        // GENERAL ASSETS
+        this.load.spritesheet('player', './assets/slime_animation_right.png', { frameWidth: 150, frameHeight: 125});
         this.load.audio('move', './assets/select.wav');
 
         //player sprites and animation
@@ -67,10 +80,11 @@ class Menu extends Phaser.Scene{
         gameRooms.push(new Map(this, "stage1", 5,20));
         console.log('MAKING STAGE 2');
         gameRooms.push(new Map(this, "stage2", 5,20));
-        console.log('MAKING STAGE 3');
-        gameRooms.push(new Map(this, "stage3", 5,20));
 
+        console.log("STAGE 1 MAP");
         gameRooms[0].printMap();
+        console.log("STAGE 2 MAP");
+        gameRooms[1].printMap();
         
 
     }

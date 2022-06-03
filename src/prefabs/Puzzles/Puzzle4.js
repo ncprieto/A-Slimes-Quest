@@ -1,17 +1,20 @@
 class Puzzle4 extends Room{
-    constructor(name, roomY, roomX, prizeX, prizeY){
+    constructor(name, roomY, roomX, prizeX, prizeY, backgroundStr, pieceStr, doorStr){
         super(name);
-        this.puzzleMade = [0,0,0,0,0,0];
         this.wallScale = 0.75;
         this.roomY = roomY;
         this.roomX = roomX;
         this.prizeX = prizeX;
         this.prizeY = prizeY;
         this.puzzleMade = false;
+        this.backgroundStr = backgroundStr;
+        this.pieceStr = pieceStr;
+        this.doorStr = doorStr;
     }
-    puzzleUpdate(player, doorPosArr){
+    puzzleUpdate(player, doorPosArr, background){
         this.player =  player;
         if(!this.puzzleMade){
+            background.setTexture(this.backgroundStr);
             this.makePuzzle1(doorPosArr);
             this.physics.add.collider(this.player, this.piece1, this.hitPiece1, null, this);
             this.physics.add.collider(this.player, this.piece2, this.hitPiece2, null, this);
@@ -33,39 +36,39 @@ class Puzzle4 extends Room{
             inVert: true,
             inHoriz: false
         }
-        this.piece1 = this.physics.add.sprite(this.piece1Obj.path[0], this.piece1Obj.path[1], 'wallTile').setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece1 = this.physics.add.sprite(this.piece1Obj.path[0], this.piece1Obj.path[1], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
         this.piece2Obj = {
             path: [1000, 200, 550, 200, 400, 1000],
             target: [400, 200],
             inVert: true,
             inHoriz: false
         }
-        this.piece2 = this.physics.add.sprite(this.piece2Obj.path[0], this.piece2Obj.path[2], 'wallTile').setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece2 = this.physics.add.sprite(this.piece2Obj.path[0], this.piece2Obj.path[2], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
         this.piece3Obj = {
             path: [450, 400, 900, 400, 300, 450],
             target: [400, 300],
             inVert: false,
             inHoriz: true
         }
-        this.piece3 = this.physics.add.sprite(this.piece3Obj.path[2], this.piece3Obj.path[0], 'wallTile').setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece3 = this.physics.add.sprite(this.piece3Obj.path[2], this.piece3Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
         this.piece4Obj = {
             path: [300, 400, 900, 900, 300, 450],
             target: [900, 450],
             inVert: false,
             inHoriz: true
         }
-        this.piece4 = this.physics.add.sprite(this.piece4Obj.path[1], this.piece4Obj.path[0], 'wallTile').setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece4 = this.physics.add.sprite(this.piece4Obj.path[1], this.piece4Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
         if(this.roomY > this.prizeY){
-            this.lockedDoor = this.physics.add.sprite(doorPosArr[0], 0, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
+            this.lockedDoor = this.physics.add.sprite(doorPosArr[0], 0, this.doorStr).setOrigin(0, 0).setScale(this.wallScale);
         }
         else if(this.roomY < this.prizeY){
-            this.lockedDoor = this.physics.add.sprite(doorPosArr[1], game.config.height - this.wallSize, 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
+            this.lockedDoor = this.physics.add.sprite(doorPosArr[1], game.config.height - this.wallSize, this.doorStr).setOrigin(0, 0).setScale(this.wallScale);
         }
         else if(this.roomX > this.prizeX){
-            this.lockedDoor = this.physics.add.sprite(0, doorPosArr[2], 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
+            this.lockedDoor = this.physics.add.sprite(0, doorPosArr[2], this.doorStr).setOrigin(0, 0).setScale(this.wallScale);
         }
         else if(this.roomX < this.prizeX){
-            this.lockedDoor = this.physics.add.sprite(game.config.width - this.wallSize, doorPosArr[3], 'wallTile').setOrigin(0, 0).setScale(this.wallScale);
+            this.lockedDoor = this.physics.add.sprite(game.config.width - this.wallSize, doorPosArr[3], this.doorStr).setOrigin(0, 0).setScale(this.wallScale);
         }
         this.lockedDoor.body.immovable = true;
     }

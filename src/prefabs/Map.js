@@ -405,22 +405,65 @@ class Map{
                             }
                         }
                         let index = Math.floor(Math.random() * this.puzzleTypes.length);
+                        let pzlBackground;
+                        let pieceStr;
+                        let doorStr;
                         switch(this.puzzleTypes[index]){
                             case "puzzle1":
                                 console.log("MAKING PUZZLE ONE");
-                                this.map[i][j].exits.scene = new Puzzle1(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                if(this.name == 'stage1'){
+                                    pzlBackground = 'puzzle1_floor_stage1';
+                                    pieceStr = 'puzzle_piece_stage1';
+                                    doorStr = 'walltile_stage1';
+                                }
+                                else if(this.name == 'stage2'){
+                                    pzlBackground = 'puzzle1_floor_stage2';
+                                    pieceStr = 'puzzle_piece_stage2';
+                                    doorStr = 'walltile_stage2';
+                                }
+                                this.map[i][j].exits.scene = new Puzzle1(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                             case "puzzle2":
                                 console.log("MAKING  PUZZLE TWO");
-                                this.map[i][j].exits.scene = new Puzzle2(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                if(this.name == 'stage1'){
+                                    pzlBackground = 'puzzle1_floor_stage1';
+                                    pieceStr = 'puzzle_piece_stage1';
+                                    doorStr = 'walltile_stage1';
+                                }
+                                else if(this.name == 'stage2'){
+                                    pzlBackground = 'puzzle1_floor_stage2';
+                                    pieceStr = 'puzzle_piece_stage2';
+                                    doorStr = 'walltile_stage2';
+                                }
+                                this.map[i][j].exits.scene = new Puzzle2(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                             case "puzzle3":
                                 console.log("MAKING OPUZZLE THREE");
-                                this.map[i][j].exits.scene = new Puzzle3(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                if(this.name == 'stage1'){
+                                    pzlBackground = 'puzzle2_floor_stage1';
+                                    pieceStr = 'puzzle_piece_stage1';
+                                    doorStr = 'walltile_stage1';
+                                }
+                                else if(this.name == 'stage2'){
+                                    pzlBackground = 'puzzle2_floor_stage2';
+                                    pieceStr = 'puzzle_piece_stage2';
+                                    doorStr = 'walltile_stage2';
+                                }
+                                this.map[i][j].exits.scene = new Puzzle3(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                             case "puzzle4":
                                 console.log("MAKING PUZZLE FOUR");
-                                this.map[i][j].exits.scene = new Puzzle4(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY);
+                                if(this.name == 'stage1'){
+                                    pzlBackground = 'puzzle2_floor_stage1';
+                                    pieceStr = 'puzzle_piece_stage1';
+                                    doorStr = 'walltile_stage1';
+                                }
+                                else if(this.name == 'stage2'){
+                                    pzlBackground = 'puzzle2_floor_stage2';
+                                    pieceStr = 'puzzle_piece_stage2';
+                                    doorStr = 'walltile_stage2';
+                                }
+                                this.map[i][j].exits.scene = new Puzzle4(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                         }
                         this.puzzleTypes.splice(index, 1);
