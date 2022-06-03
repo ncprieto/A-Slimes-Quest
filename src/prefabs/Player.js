@@ -38,6 +38,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.alpha = 1;
             this.wasHit = 0;
         }
+
+
+        if(this.size <= 0) {
+            this.size = 0;
+            this.scene.gameOver = true;
+            this.emitter.explode(300, this.x, this.y);
+        }
+
         //left right movement
         if(Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.flipX = true;
@@ -108,10 +116,26 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.emitter.emitParticle(5);
             this.size -= 0.1;
             this.wasHit = 5;
-            if(this.size <= 0) {
-                this.size = 0;
-                this.scene.gameOver = true;
-                this.emitter.explode(300, this.x, this.y);
+        }
+    }
+    hitBox(tag) {
+        if(tag == 'big') {
+            if(this.wasHit == 0 && this.size <= 0.5) {
+                this.emitter.setPosition(this.x, this.y);
+                this.emitter.emitParticle(4);
+                this.emitter.emitParticle(5);
+                this.size += 0.1;
+                this.wasHit = 5;
+                
+            }
+        }
+        else {
+            if(this.wasHit == 0 && this.size >= 0.2) {
+                this.emitter.setPosition(this.x, this.y);
+                this.emitter.emitParticle(4);
+                this.emitter.emitParticle(5);
+                this.size -= 0.1;
+                this.wasHit = 5;
             }
         }
     }

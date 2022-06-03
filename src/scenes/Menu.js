@@ -8,6 +8,7 @@ class Menu extends Phaser.Scene{
         this.load.image('door', './assets/doorTemp.png');
         this.load.image('background', './assets/floor_1.png');
         
+        this.load.image('startBox', './assets/start.png');
 
         this.load.audio('move', './assets/select.wav');
 
@@ -21,6 +22,11 @@ class Menu extends Phaser.Scene{
         this.load.spritesheet('bat', './assets/flying_eye_animation.png', {frameWidth: 250, frameHeight: 125});
         this.load.spritesheet('skull', './assets/skull_enemy_animation.png', {frameWidth: 100, frameHeight: 100});
         this.load.image('warning', './assets/warning.png');
+
+        //menu and tutorial
+        this.load.image('menu', './assets/title_screen.png');
+        this.load.image('tutorial1', './assets/tutorial_1.png');
+        this.load.image('tutorial2', './assets/tutorial_2.png');
 
 
     }
@@ -49,22 +55,12 @@ class Menu extends Phaser.Scene{
         keyDOWN  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyF     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyT     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
 
 
-        let menuConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#87ceeb',
-            color: '#000000',
-            align: 'right',
-            padding: {
-            top: 5,
-            bottom: 5,
-            },
-            fixedWidth: 0
-        }
-
-        this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to Start', menuConfig).setOrigin(0.5);
+        this.menu = this.add.image(0,0, 'menu').setOrigin(0,0);
+        this.tutorial1 = this.add.image(0,0, 'tutorial1').setOrigin(0,0).setAlpha(0);
+        this.tutorial2 = this.add.image(0,0, 'tutorial2').setOrigin(0,0).setAlpha(0);
 
         //create games
         console.log('MAKING STAGE 1');
@@ -86,8 +82,20 @@ class Menu extends Phaser.Scene{
             //gameRooms[0].bootRooms();
             this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
         }
-        if(Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            this.sound.play('move');
+        if(Phaser.Input.Keyboard.JustDown(keyT)) {
+            if(this.tutorial1.alpha == 1) {
+                this.tutorial2.setAlpha(1);
+                this.tutorial1.setAlpha(0);
+            }
+            else if(this.tutorial2.alpha == 1) {
+                this.menu.setAlpha(1);
+                this.tutorial2.setAlpha(0);
+            }
+            else {
+                this.menu.setAlpha(0);
+                this.tutorial1.setAlpha(1);
+            }
+            
         }
     }
     
