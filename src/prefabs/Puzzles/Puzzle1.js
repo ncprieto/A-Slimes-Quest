@@ -13,9 +13,18 @@ class Puzzle1 extends Room{
     }
     puzzleUpdate(player, doorPosArr, background){
         this.player =  player;
-        if(!this.puzzleMade){
+        if(this.backgroundStr == 'puzzle1_floor_stage1' && !this.puzzleMade){
             background.setTexture(this.backgroundStr);
-            this.makePuzzle1(doorPosArr);
+            console.log;("MAKING PUZZLE 2 STAGE 1");
+            this.makePuzzle1Stage1();
+        }
+        else if(this.backgroundStr == 'puzzle1_floor_stage2' && !this.puzzleMade){
+            console.log("MAKING PUZZLE 2 STAGE 2");
+            background.setTexture(this.backgroundStr);
+            this.makePuzzle1Stage2();           
+        }
+        if(!this.puzzleMade){
+            this.makeLockedDoor(doorPosArr);
             this.physics.add.collider(this.player, this.piece1, this.hitPiece1, null, this);
             this.physics.add.collider(this.player, this.piece2, this.hitPiece2, null, this);
             this.physics.add.collider(this.player, this.piece3, this.hitPiece3, null, this);
@@ -28,7 +37,7 @@ class Puzzle1 extends Room{
             this.lockedDoor.destroy(true);
         }
     }
-    makePuzzle1(doorPosArr){
+    makePuzzle1Stage1(){
         // this.piece?Obj holds data for the movement of the piece sprite
         // path contain data for how the piece moves path[0] is a constant
         // ie the piece will stay at x 400 and moves along y 200 through y 600
@@ -38,22 +47,43 @@ class Puzzle1 extends Room{
         // it completes its part of the puzzle
         // if piece is at x 400 and y 600 then its target was met
         this.piece1Obj = {
-            path: [400, 200, 600],
-            target: [400, 600]
+            path: [368, 180, 565],
+            target: [368, 180]
         }
-        this.piece1 = this.physics.add.sprite(this.piece1Obj.path[0], this.piece1Obj.path[1], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece1 = this.physics.add.sprite(this.piece1Obj.path[0], this.piece1Obj.path[2], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
         this.piece2Obj = {
-            path: [200, 500, 800],
-            target: [800, 200]
+            path: [373, 560, 848],
+            target: [560, 373]
         }
-        this.piece2 = this.physics.add.sprite(this.piece2Obj.path[1], this.piece2Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece2 = this.physics.add.sprite(this.piece2Obj.path[2], this.piece2Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
         this.piece3Obj = {
-            path: [300, 500, 900, 900, 300, 600],
-            target: [900, 600],
+            path: [470, 176, 943, 943, 470, 568],
+            target: [943, 568],
             inVert: false,
             inHoriz: true
         }
         this.piece3 = this.physics.add.sprite(this.piece3Obj.path[1], this.piece3Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+    }
+    makePuzzle1Stage2(){
+        this.piece1Obj = {
+            path: [368, 373, 470],
+            target: [368, 373]
+        }
+        this.piece1 = this.physics.add.sprite(this.piece1Obj.path[0], this.piece1Obj.path[2], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece2Obj = {
+            path: [177, 560, 848],
+            target: [560, 177]
+        }
+        this.piece2 = this.physics.add.sprite(this.piece2Obj.path[2], this.piece2Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+        this.piece3Obj = {
+            path: [565, 176, 1041, 1041, 470, 568],
+            target: [1041, 470],
+            inVert: false,
+            inHoriz: true
+        }
+        this.piece3 = this.physics.add.sprite(this.piece3Obj.path[1], this.piece3Obj.path[0], this.pieceStr).setOrigin(0, 0).setScale(this.wallScale).setBounce(0);
+    }
+    makeLockedDoor(doorPosArr){
         // this branch of conditionals adds an immovable door in front of
         // the actual door the player can moves through
         if(this.roomY > this.prizeY){
@@ -71,12 +101,15 @@ class Puzzle1 extends Room{
         this.lockedDoor.body.immovable = true;
     }
     hitPiece1(){
+        console.log("TOUCHING PIECE ONE");
         this.pieceMovesVertical(this.piece1, this.piece1Obj.path[0], this.piece1Obj.path[1], this.piece1Obj.path[2]);
     }
     hitPiece2(){
+        console.log("TOUCHING PIECE TWO");
         this.pieceMovesHorizontal(this.piece2, this.piece2Obj.path[0], this.piece2Obj.path[1], this.piece2Obj.path[2]);
     }
     hitPiece3(){
+        console.log("TOUCHING PIECE THREE");
         if(this.piece3.y == this.piece3Obj.path[0] && this.piece3.x == this.piece3Obj.path[3]){
             if(this.player.body.touching.left || this.player.body.touching.right){
                 this.pieceMovesHorizontal(this.piece3, this.piece3Obj.path[0], this.piece3Obj.path[1], this.piece3Obj.path[2]);
