@@ -124,7 +124,7 @@ class Menu extends Phaser.Scene{
             this.music.setLoop(true);
             this.music.play();
             //gameRooms[0].bootRooms();
-            this.scene.start(gameRooms[1].map[2][2].exits.scene.sceneName);
+            this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
         }
         if(Phaser.Input.Keyboard.JustDown(keyT)) {
             if(this.tutorial1.alpha == 1) {
