@@ -100,7 +100,7 @@ class Room extends Phaser.Scene{
             this.add.text(powerUp2.x, powerUp2.y + 50, powerUp2.price).setFontSize(32).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+32, "Press (C) to use your power up!").setFontSize(32).setOrigin(0.5);
         }
-        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss && this.stageNum == 1) {
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss.bat) {
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.bossCreate();
         }
     }
@@ -147,7 +147,7 @@ class Room extends Phaser.Scene{
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.prize) {
             console.log("PUZZLE")
         }
-        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss && this.stageNum == 1) {
+        else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss.bat) {
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.bossUpdate();
         }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){

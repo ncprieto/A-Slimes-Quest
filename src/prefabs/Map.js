@@ -490,10 +490,10 @@ class Map{
                         this.map[i][j].exits.scene = new RockBoss(this.name + "_" + i + j + "_" + "boss", doorStr, 'puzzle1_floor_stage1', this.bossCords);
                     }
                     else if(this.map[i][j].type.boss.bat){
-                        this.map[i][j].exits.scene = new Boss(this.name + "_" + i + j + "_" + "boss");
+                        this.map[i][j].exits.scene = new Boss2(this.name + "_" + i + j + "_" + "boss");
                     }
                     else if(this.map[i][j].type.start){
-                        this.map[i][j].exits.scene = new Boss2(this.name + "_" + i + j + "_" + "start");
+                        this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "start");
                     }
                     else{
                         this.map[i][j].exits.scene = new Room(this.name + "_" + i + j + "_" + "normal");

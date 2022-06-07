@@ -109,6 +109,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             gameRooms[0].map[2][2].exits.scene.prevData.money = 0;
             this.money = 0; 
             gameRooms[0].map[2][2].exits.scene.cameFrom = "START";
+            gameRooms[this.scene.stageNum].map[2][2].exits.scene.clearKeys();
             this.scene.scene.sleep(this.scene.sceneName);
             this.scene.scene.run(gameRooms[this.scene.stageNum].map[2][2].exits.scene.sceneName);
         }
