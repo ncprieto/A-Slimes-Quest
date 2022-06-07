@@ -27,6 +27,7 @@ class Room extends Phaser.Scene{
         this.made = false;
         this.warning = [];
         this.numEnemies = 0;
+        this.totalEnemies = 0;
     }
     create() {
         //Keyboard Setup
@@ -435,7 +436,7 @@ class Room extends Phaser.Scene{
                 enemy.size = enemySize;
                 enemy.type = enemyType;
                 enemy.setVelocityX(enemy.speedX);
-                this.enemies.push(enemy);
+                this.enemies[i] = enemy;
                 enemy.play(enemy.type + 'Move');
                 this.physics.add.collider(this.player, this.enemies[i], this.hitEnemy, null, this);
 
