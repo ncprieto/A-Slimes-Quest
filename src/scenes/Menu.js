@@ -36,6 +36,11 @@ class Menu extends Phaser.Scene{
         this.load.spritesheet('skull', './assets/skull_enemy_animation.png', {frameWidth: 100, frameHeight: 100});
         this.load.image('warning', './assets/warning.png');
 
+        // boss sprites
+        this.load.image('rockBoss', './assets/rock_boss.png');
+        this.load.spritesheet('rockBossAnim', './assets/rock_boss_animation.png', {frameWidth: 200, frameHeight: 200});
+        this.load.image('rockBossComplete', './assets/win_screen_1.png');
+
         //menu and tutorial
         this.load.image('menu', './assets/title_screen.png');
         this.load.image('tutorial1', './assets/tutorial_1.png');
@@ -58,8 +63,7 @@ class Menu extends Phaser.Scene{
         this.anims.create({key: 'slimeMove', frames: this.anims.generateFrameNumbers('slime', {start:0, end: 3}), frameRate: 10, repeat: -1});
         this.anims.create({key: 'skullMove', frames: this.anims.generateFrameNumbers('skull', {start:0, end: 3}), frameRate: 10, repeat: -1});
         this.anims.create({key: 'batMove', frames: this.anims.generateFrameNumbers('bat', {start:0, end: 4}), frameRate: 10, repeat: -1});
-        //this.anims.create({key: 'walkLeftStart', frames: this.anims.generateFrameNumbers('moveLeft', {start:1, end: 1}), frameRate: 10, repeat: 0});
-        //this.anims.create({key: 'walkLeftDuring', frames: this.anims.generateFrameNumbers('moveLeft', {start:1, end: 3}), frameRate: 10, repeat: -1})
+        this.anims.create({key: 'rockBossAnimation', frames: this.anims.generateFrameNumbers('rockBossAnim', {start:0, end: 3}), frameRate: 3, repeat: -1});
 
         //keyboard inputs
         keyLEFT  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -109,7 +113,6 @@ class Menu extends Phaser.Scene{
                 this.menu.setAlpha(0);
                 this.tutorial1.setAlpha(1);
             }
-            
         }
     }
     

@@ -70,7 +70,6 @@ class Room extends Phaser.Scene{
             fixedWidth: 0
         }
         this.gameOverText = this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to return to menu', menuConfig).setOrigin(0.5).setAlpha(0);
-
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.start) {
             this.boxes = this.add.group();
             let bigBox =    this.physics.add.sprite(350, 200, 'startBox').setScale(2);
@@ -106,6 +105,9 @@ class Room extends Phaser.Scene{
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.puzzle){
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos, this.background);
             this.normalUpdate();
+        }
+        else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss.rock){
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.rockBossUpdate(this.player, this.doorPos, this.background);
         }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){
             this.normalUpdate();
