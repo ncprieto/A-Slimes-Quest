@@ -67,19 +67,7 @@ class Room extends Phaser.Scene{
         this.upgradeIconSmall = this.add.image(100, 25, 'smallUpgrade').setScale(0.5);
 
         //game over
-        let menuConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#87ceeb',
-            color: '#000000',
-            align: 'right',
-            padding: {
-            top: 5,
-            bottom: 5,
-            },
-            fixedWidth: 0
-        }
-        this.gameOverText = this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to return to menu', menuConfig).setOrigin(0.5).setAlpha(0);
+        this.gameOverScreen = this.add.image(0,0, 'gameOver').setOrigin(0,0).setAlpha(0);
 
         //Start room size change boxes
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.start) {
@@ -111,7 +99,9 @@ class Room extends Phaser.Scene{
             this.add.text(powerUp1.x, powerUp1.y + 50, powerUp1.price).setFontSize(32).setOrigin(0.5);
             this.add.text(powerUp2.x, powerUp2.y + 50, powerUp2.price).setFontSize(32).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+32, "Press (C) to use your power up!").setFontSize(32).setOrigin(0.5);
-
+        }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss && this.stageNum == 1) {
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.bossCreate();
         }
     }
     wake() {
@@ -140,7 +130,8 @@ class Room extends Phaser.Scene{
             this.player.update();
         }
         else {
-            this.gameOverText.alpha = 1;
+            this.gameOverScreen.alpha = 1;
+            this.gameOverScreen.depth = 1;  
             if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 menu.music.stop();
                 this.scene.start("menuScene");
@@ -152,6 +143,9 @@ class Room extends Phaser.Scene{
         }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.prize) {
 
+        }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss && this.stageNum == 1) {
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.bossUpdate();
         }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){
             this.normalUpdate();

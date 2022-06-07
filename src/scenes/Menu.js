@@ -27,6 +27,7 @@ class Menu extends Phaser.Scene{
         this.load.image('moneyIcon', './assets/money_icon.png');
         this.load.image('largeUpgrade', './assets/grow_upgrade.png');
         this.load.image('smallUpgrade', './assets/shrink_upgrade.png');
+        this.load.image('gameOver', './assets/lose_screen.png');
 
         //player sprites and animation
         this.load.spritesheet('moveRight', './assets/slime_animation_right.png', {frameWidth: 150, frameHeight: 125});
@@ -43,6 +44,7 @@ class Menu extends Phaser.Scene{
         this.load.image('menu', './assets/title_screen.png');
         this.load.image('tutorial1', './assets/tutorial_1.png');
         this.load.image('tutorial2', './assets/tutorial_2.png');
+        this.load.image('tutorial3', './assets/tutorial_3.png');
 
         //sounds
         this.load.audio('upgrade', './assets/upgrade.wav');
@@ -53,9 +55,15 @@ class Menu extends Phaser.Scene{
         this.load.audio('puzzleSolve', './assets/puzzle_solve.wav');
         this.load.audio('absorb', './assets/absorb.wav');
 
+        //boss2
+        this.load.spritesheet('eyeBoss', './assets/six_wing_boss_animation.png', {frameWidth: 400, frameHeight: 300});
+        this.load.image('eyeBossEnd', './assets/win_screen_2.png');
+        this.load.image('credits', './assets/credits.png');
+
     }
     create(){ 
         this.music = this.sound.add('bgm1');
+        this.music2 = this.sound.add('bgm2');
 
         //clear gameRooms for reset
         for(let i = gameRooms.length - 1; i >= 0; i--) {
@@ -87,6 +95,7 @@ class Menu extends Phaser.Scene{
         this.menu = this.add.image(0,0, 'menu').setOrigin(0,0);
         this.tutorial1 = this.add.image(0,0, 'tutorial1').setOrigin(0,0).setAlpha(0);
         this.tutorial2 = this.add.image(0,0, 'tutorial2').setOrigin(0,0).setAlpha(0);
+        this.tutorial3 = this.add.image(0,0, 'tutorial3').setOrigin(0,0).setAlpha(0);
 
         //create games
         console.log('MAKING STAGE 1');
@@ -118,8 +127,12 @@ class Menu extends Phaser.Scene{
                 this.tutorial1.setAlpha(0);
             }
             else if(this.tutorial2.alpha == 1) {
-                this.menu.setAlpha(1);
+                this.tutorial3.setAlpha(1);
                 this.tutorial2.setAlpha(0);
+            }
+            else if(this.tutorial3.alpha == 1) {
+                this.menu.setAlpha(1);
+                this.tutorial3.setAlpha(0);
             }
             else {
                 this.menu.setAlpha(0);
