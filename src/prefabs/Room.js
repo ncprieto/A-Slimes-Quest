@@ -142,6 +142,7 @@ class Room extends Phaser.Scene{
         else {
             this.gameOverText.alpha = 1;
             if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+                menu.music.stop();
                 this.scene.start("menuScene");
             }
         }

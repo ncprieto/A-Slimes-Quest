@@ -10,6 +10,7 @@ class Puzzle3 extends Room{
         this.backgroundStr = backgroundStr;
         this.pieceStr = pieceStr;
         this.doorStr = doorStr;
+        this.doorOpened = false;
     }
     puzzleUpdate(player, doorPosArr, background){
         this.player =  player;
@@ -37,7 +38,10 @@ class Puzzle3 extends Room{
         && this.piece3.y == this.piece3Obj.target[1] && this.piece3.x == this.piece3Obj.target[0]
         && this.piece4.y == this.piece4Obj.target[1] && this.piece4.x == this.piece4Obj.target[0]){
             this.lockedDoor.destroy(true);
-            this.sound.play('puzzleSolve');
+            if(!this.doorOpened) {
+                this.sound.play('puzzleSolve');
+                this.doorOpened = true;
+            }
         }
     }
     makePuzzle3Stage1(){

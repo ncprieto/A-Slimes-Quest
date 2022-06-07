@@ -54,7 +54,8 @@ class Menu extends Phaser.Scene{
         this.load.audio('absorb', './assets/absorb.wav');
 
     }
-    create(){
+    create(){ 
+        this.music = this.sound.add('bgm1');
 
         //clear gameRooms for reset
         for(let i = gameRooms.length - 1; i >= 0; i--) {
@@ -98,16 +99,16 @@ class Menu extends Phaser.Scene{
         console.log("STAGE 2 MAP");
         gameRooms[1].printMap();
         
-
+        menu = this;
     }
     update(){
+        
         //this.player.update();
         //console.log(gameRooms.stage1.map[3][3].exits.scene.sceneName);
         //console.log(game.config.scene);
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-            var music = this.sound.add('bgm1');
-            music.setLoop(true);
-            music.play();
+            this.music.setLoop(true);
+            this.music.play();
             //gameRooms[0].bootRooms();
             this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
         }
