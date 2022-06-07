@@ -23,7 +23,10 @@ class Menu extends Phaser.Scene{
         
         // GENERAL ASSETS
         this.load.spritesheet('player', './assets/slime_animation_right.png', { frameWidth: 150, frameHeight: 125});
-        this.load.audio('move', './assets/select.wav');
+        this.load.audio('move', './assets/door.wav');
+        this.load.image('moneyIcon', './assets/money_icon.png');
+        this.load.image('largeUpgrade', './assets/grow_upgrade.png');
+        this.load.image('smallUpgrade', './assets/shrink_upgrade.png');
 
         //player sprites and animation
         this.load.spritesheet('moveRight', './assets/slime_animation_right.png', {frameWidth: 150, frameHeight: 125});
@@ -46,9 +49,18 @@ class Menu extends Phaser.Scene{
         this.load.image('tutorial1', './assets/tutorial_1.png');
         this.load.image('tutorial2', './assets/tutorial_2.png');
 
+        //sounds
+        this.load.audio('upgrade', './assets/upgrade.wav');
+        this.load.audio('bgm1', './assets/dungeon_1.mp3');
+        this.load.audio('bgm2', './assets/dungeon_2.mp3');
+        this.load.audio('death', './assets/death.wav');
+        this.load.audio('hit', './assets/hit.wav');
+        this.load.audio('puzzleSolve', './assets/puzzle_solve.wav');
+        this.load.audio('absorb', './assets/absorb.wav');
 
     }
-    create(){
+    create(){ 
+        this.music = this.sound.add('bgm1');
 
         //clear gameRooms for reset
         for(let i = gameRooms.length - 1; i >= 0; i--) {
@@ -73,6 +85,7 @@ class Menu extends Phaser.Scene{
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyF     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyT     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
+        
 
 
         this.menu = this.add.image(0,0, 'menu').setOrigin(0,0);
@@ -90,13 +103,16 @@ class Menu extends Phaser.Scene{
         console.log("STAGE 2 MAP");
         gameRooms[1].printMap();
         
-
+        menu = this;
     }
     update(){
+        
         //this.player.update();
         //console.log(gameRooms.stage1.map[3][3].exits.scene.sceneName);
         //console.log(game.config.scene);
         if(Phaser.Input.Keyboard.JustDown(keySPACE)){
+            this.music.setLoop(true);
+            this.music.play();
             //gameRooms[0].bootRooms();
             this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
         }
