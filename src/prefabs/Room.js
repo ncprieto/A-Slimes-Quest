@@ -18,10 +18,10 @@ class Room extends Phaser.Scene{
         //some fields
         this.gameOver = false;
         this.prevData = {
-            prevSize: 0.4,
-            prevPowerUp: null
+            prevSize: 0.2,
+            prevPowerUp: null,
+            money: 0
         }
-
         //monster spawning
         this.enemies = [];
         this.made = false;
@@ -35,13 +35,14 @@ class Room extends Phaser.Scene{
         keyUP    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+        keyC     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+        keyR     = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         //this.spawnDoor();
 
         //create walls
         this.generateRoom();
 
-        this.add.text(game.config.width/2, game.config.height/2+32, 'room: ' + this.sceneName).setOrigin(0.5);
+        //this.add.text(game.config.width/2, game.config.height/2+32, 'room: ' + this.sceneName).setOrigin(0.5);
 
         this.player = new Player(this, 0,0, 'player').setOrigin(0.5, 0.5);
         this.player.body.setSize(100, 100)
@@ -55,7 +56,15 @@ class Room extends Phaser.Scene{
 
         //create wake function
         this.events.on('wake', function() {this.wake()}, this);
-        
+
+        //money text
+        this.moneyText = this.add.text(game.config.width - 100, 25, '0').setFontSize(35).setOrigin(0.5);
+        this.moneyIcon = this.add.image(this.moneyText.x - 50, this.moneyText.y, 'moneyIcon').setScale(0.5);
+
+        //upgrades text
+        this.upgradeIconLarge = this.add.image(100, 25, 'largeUpgrade').setScale(0.5);
+        this.upgradeIconSmall = this.add.image(100, 25, 'smallUpgrade').setScale(0.5);
+
         //game over
         let menuConfig = {
             fontFamily: 'Courier',
@@ -71,6 +80,7 @@ class Room extends Phaser.Scene{
         }
         this.gameOverText = this.add.text(game.config.width/2, game.config.height/2+32, 'Press (SPACE) to return to menu', menuConfig).setOrigin(0.5).setAlpha(0);
 
+        //Start room size change boxes
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.start) {
             this.boxes = this.add.group();
             let bigBox =    this.physics.add.sprite(350, 200, 'startBox').setScale(2);
@@ -83,6 +93,23 @@ class Room extends Phaser.Scene{
             this.boxes.add(bigBox);
             this.boxes.add(smallBox);
             this.physics.add.collider(this.player, this.boxes, this.startCol, null, this);
+        }
+        if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.prize) {
+            this.powerUps = this.add.group()
+            let powerUp1 = this.physics.add.sprite(950, 200, 'largeUpgrade');
+            let powerUp2 = this.physics.add.sprite(350, 200, 'smallUpgrade');
+            powerUp1.body.immovable = true;
+            powerUp2.body.immovable = true;
+            powerUp1.tag = 'large';
+            powerUp2.tag = 'small';
+            powerUp1.price = Math.floor(12 + (Math.random() * 8));
+            powerUp2.price = Math.floor(12 + (Math.random() * 8));
+            this.powerUps.add(powerUp1);
+            this.powerUps.add(powerUp2);
+            this.physics.add.collider(this.player, this.powerUps, this.powerUpCol, null, this);
+            this.add.text(powerUp1.x, powerUp1.y + 50, powerUp1.price).setFontSize(32).setOrigin(0.5);
+            this.add.text(powerUp2.x, powerUp2.y + 50, powerUp2.price).setFontSize(32).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+32, "Press (C) to use your power up!").setFontSize(32).setOrigin(0.5);
 
         }
     }
@@ -94,6 +121,20 @@ class Room extends Phaser.Scene{
         this.clearKeys();
     }
     update() {
+        this.moneyText.setText(this.player.money);
+        if(this.player.powerUp == 'large') {
+            this.upgradeIconLarge.alpha = 1;
+            this.upgradeIconSmall.alpha = 0;
+        }
+        else if(this.player.powerUp == 'small') {
+            this.upgradeIconLarge.alpha = 0;
+            this.upgradeIconSmall.alpha = 1;
+        }
+        else {
+            this.upgradeIconLarge.alpha = 0;
+            this.upgradeIconSmall.alpha = 0; 
+        }
+
         if(!this.gameOver) {
             this.player.update();
         }
@@ -107,12 +148,17 @@ class Room extends Phaser.Scene{
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos, this.background);
             this.normalUpdate();
         }
+        else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.prize) {
+
+        }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.normal){
             this.normalUpdate();
         }
     }
     spawnPlayer() {
         this.player.size = this.prevData.prevSize;
+        this.player.money = this.prevData.money;
+        this.player.powerUp = this.prevData.prevPowerUp;
         this.player.setScale(this.prevData.prevSize);
         switch(this.cameFrom){
             case "UP":
@@ -162,7 +208,7 @@ class Room extends Phaser.Scene{
             }
             else {
                 this.doorPos[0] = Math.floor(4 + (Math.random() * 15)) * this.wallSize;
-                this.doorSize[0] = Math.floor(2 + (Math.random() * 8)) * 3;
+                this.doorSize[0] = Math.floor(3 + (Math.random() * 8)) * 3;
             }
             
         }
@@ -173,7 +219,7 @@ class Room extends Phaser.Scene{
             }
             else {
                 this.doorPos[1] = Math.floor(4 + (Math.random() * 15)) * this.wallSize;
-                this.doorSize[1] = Math.floor(2 + (Math.random() * 8)) * 3;
+                this.doorSize[1] = Math.floor(3 + (Math.random() * 8)) * 3;
             }
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.left) {
@@ -183,7 +229,7 @@ class Room extends Phaser.Scene{
             }
             else {
                 this.doorPos[2] = Math.floor(4 + (Math.random() * 7)) * this.wallSize;
-                this.doorSize[2] = Math.floor(2 + (Math.random() * 8)) * 3;
+                this.doorSize[2] = Math.floor(3 + (Math.random() * 8)) * 3;
             }
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.right) {
@@ -193,7 +239,7 @@ class Room extends Phaser.Scene{
             }
             else {
                 this.doorPos[3] = Math.floor(4 + (Math.random() * 7)) * this.wallSize;
-                this.doorSize[3] = Math.floor(2 + (Math.random() * 8)) * 3;
+                this.doorSize[3] = Math.floor(3 + (Math.random() * 8)) * 3;
             }
         }
 
@@ -208,7 +254,8 @@ class Room extends Phaser.Scene{
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(i, -24, doorStr).setOrigin(0, 0);
+                let door = this.physics.add.sprite(i, 0, doorStr).setOrigin(0, 0).setScale(0.75);
+                door.flipY = true;
                 door.body.immovable = true;
                 //this.doors.add(door);
                 this.doors[0] = door;
@@ -226,7 +273,7 @@ class Room extends Phaser.Scene{
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(i, game.config.height - this.wallSize/2, doorStr).setOrigin(0, 0);
+                let door = this.physics.add.sprite(i, game.config.height - this.wallSize/2, doorStr).setOrigin(0).setScale(0.75);
                 door.body.immovable = true;
                 this.doors[1] = door;
                 i+= this.wallSize;
@@ -243,7 +290,9 @@ class Room extends Phaser.Scene{
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(-24, i, doorStr).setOrigin(0, 0);
+                let door = this.physics.add.sprite(10, i + 25, doorStr).setOrigin(0.5).setScale(0.75);
+                door.angle = 90; 
+                door.body.setSize(25, 100); 
                 door.body.immovable = true;
                 this.doors[2] = door;
                 i+= this.wallSize;
@@ -260,7 +309,9 @@ class Room extends Phaser.Scene{
                 doorSide2.body.immovable = true;
                 this.walls.add(doorSide1);
                 this.walls.add(doorSide2);
-                let door = this.physics.add.sprite(game.config.width - this.wallSize/2, i, doorStr).setOrigin(0, 0);
+                let door = this.physics.add.sprite(game.config.width - this.wallSize/2 +  11, i + 25, doorStr).setOrigin(0.5).setScale(0.75);
+                door.angle = -90;
+                door.body.setSize(25, 100); 
                 door.body.immovable = true;
                 this.doors[3] = door;
                 i+= this.wallSize;
@@ -276,6 +327,8 @@ class Room extends Phaser.Scene{
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.cameFrom = "UP";
             gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevData.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevData.prevPowerUp = this.player.powerUp;
+            gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.prevData.money = this.player.money;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY - 1][this.roomX].exits.scene.sceneName, "UP");
         }
         else {
@@ -288,6 +341,8 @@ class Room extends Phaser.Scene{
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.cameFrom = "DOWN";
             gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevData.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevData.prevPowerUp = this.player.powerUp;
+            gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.prevData.money = this.player.money;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY + 1][this.roomX].exits.scene.sceneName, "DOWN");
         }
         else {
@@ -300,6 +355,8 @@ class Room extends Phaser.Scene{
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.cameFrom = "LEFT";
             gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevData.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevData.prevPowerUp = this.player.powerUp;
+            gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.prevData.money = this.player.money;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX - 1].exits.scene.sceneName, "LEFT");
             
         }
@@ -313,6 +370,8 @@ class Room extends Phaser.Scene{
             this.scene.sleep(this.sceneName);
             gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.cameFrom = "RIGHT";
             gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevData.prevSize = this.player.size;
+            gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevData.prevPowerUp = this.player.powerUp;
+            gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.prevData.money = this.player.money;
             this.scene.run(gameRooms[this.stageNum].map[this.roomY][this.roomX + 1].exits.scene.sceneName, "RIGHT");
             
         }
@@ -340,7 +399,7 @@ class Room extends Phaser.Scene{
     //monster movement
     normalUpdate() {
         if(!this.made) {
-            var enemySize = this.player.size;
+            var enemySize = this.player.size - 0.1;
             this.physics.add.collider(this.enemies, this.walls);
             for(let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
                 let enemyPick = Math.floor(Math.random() * 3);
@@ -358,6 +417,9 @@ class Room extends Phaser.Scene{
                 }
                 if(i == 0) {
                     enemySize = this.player.size - 0.1;
+                    if(enemySize == 0) {
+                        enemySize += 0.1;
+                    }
                 }
                 else {
                     enemySize += 0.1;
@@ -418,12 +480,12 @@ class Room extends Phaser.Scene{
                     if(enemy.x > enemy.ogX + 200 || enemy.body.touching.right) {
                         enemy.speedX *= -1;
                         enemy.flipX = !enemy.flipX;
-                        enemy.x = enemy.x - 5;
+                        enemy.x = enemy.x - 10;
                         enemy.setVelocityX(enemy.speedX);
                     }
                     else if(enemy.x < enemy.ogX - 200 || enemy.body.touching.left) {
                         enemy.speedX *= -1;
-                        enemy.x = enemy.x + 5;
+                        enemy.x = enemy.x + 10;
                         enemy.flipX = !enemy.flipX;
                         enemy.setVelocityX(enemy.speedX);
                     }
@@ -445,20 +507,20 @@ class Room extends Phaser.Scene{
                 case 'skull':
                     if(enemy.x > enemy.ogX + 200 || enemy.body.touching.right) {
                         enemy.speedX *= -1;
-                        enemy.x = enemy.x - 5;
+                        enemy.x = enemy.x - 10;
                     }
                     else if(enemy.x < enemy.ogX - 200 || enemy.body.touching.left) {
                         enemy.speedX *= -1;
-                        enemy.x = enemy.x + 5;
+                        enemy.x = enemy.x + 10;
                     }
                     enemy.setVelocityX(enemy.speedX);
                     if(enemy.y > enemy.ogY + 200 || enemy.body.touching.down) {
                         enemy.speedY *= -1;
-                        enemy.y = enemy.y - 5;
+                        enemy.y = enemy.y - 10;
                     }
                     else if(enemy.y < enemy.ogY - 200 || enemy.body.touching.up) {
                         enemy.speedY *= -1;
-                        enemy.y = enemy.y + 5;
+                        enemy.y = enemy.y + 10;
                     }
                     enemy.setVelocityY(enemy.speedY);
                     break;
@@ -467,13 +529,16 @@ class Room extends Phaser.Scene{
     }
     //collision between enemy and player
     hitEnemy(player, enemy) {
-        if(player.size > enemy.size) {
+        if(player.size >= enemy.size) {
+            this.sound.play('absorb');
             this.enemies[enemy.number] = null;
             enemy.destroy();
             this.numEnemies --;
             player.size += 0.1;
+            this.player.money ++;
         }
         else {
+            this.sound.play('hit');
             this.player.hit();
             //this.numEnemies --;
             //player.size -= 0.1;
@@ -483,6 +548,22 @@ class Room extends Phaser.Scene{
     //collision with starting boxes
     startCol(player, box) {
         player.hitBox(box.tag);
+    }
+
+    powerUpCol(player, box) {
+        if(player.money >= box.price) {
+            this.sound.play('upgrade');
+            if(box.tag == 'large') {
+                player.powerUp = 'large';
+                player.money -= box.price;
+            }
+            else {
+                player.powerUp = 'small';
+                player.money -= box.price;
+            }
+            box.destroy();
+        }
+        
     }
 
 }

@@ -9,8 +9,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         //private params
-        this.size = 0.4;
-        this.consumed = 0;
+        this.size = 0.2;
+        this.money = 0;
+        this.powerUp = null;
 
         this.animPlayed = false;
 
@@ -30,6 +31,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
     update() {
+        this.setScale(this.size);
         if(this.wasHit > 0) {
             this.wasHit -= 0.1;
             this.alpha = 0.5 * Math.sin(this.wasHit * 4) + 0.5;
@@ -40,9 +42,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
 
-        if(this.size <= 0) {
+        if(this.size <= 0.05) {
             this.size = 0;
             this.scene.gameOver = true;
+            this.scene.sound.play('death');
             this.emitter.explode(300, this.x, this.y);
         }
 
@@ -82,8 +85,32 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.body.setVelocityX(0);
             this.anims.stop('walkDuring');
             this.anims.play('walkStart');
-            
-            
+        }
+
+        //Use power up
+        if(Phaser.Input.Keyboard.JustDown(keyC)) {
+            this.scene.sound.play('upgrade');
+            //console.log("power up");
+            if(this.powerUp == 'large') {
+                this.size += 0.1;
+                this.powerUp = null;
+            }
+            if(this.powerUp == 'small') {
+                this.size -= 0.1;
+                this.powerUp = null;
+            }
+        }
+
+        //reset
+        if(Phaser.Input.Keyboard.JustDown(keyR) && this.scene.sceneName != gameRooms[this.scene.stageNum].map[2][2].exits.scene.sceneName) {
+            this.scene.sound.play('death');
+            gameRooms[0].map[2][2].exits.scene.prevData.prevSize = 0.2;
+            gameRooms[0].map[2][2].exits.scene.prevData.prevPowerUp = null;
+            gameRooms[0].map[2][2].exits.scene.prevData.money = 0;
+            this.money = 0; 
+            gameRooms[0].map[2][2].exits.scene.cameFrom = "START";
+            this.scene.scene.sleep(this.scene.sceneName);
+            this.scene.scene.run(gameRooms[this.scene.stageNum].map[2][2].exits.scene.sceneName);
         }
 
         //up down movement
@@ -98,7 +125,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         //debug change size
-        if(keySPACE.isDown) {
+        /*if(keySPACE.isDown) {
             if(this.size > 0.1){
                 this.size -= 0.01
             }
@@ -106,7 +133,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if(keyC.isDown) {
                 this.size += 0.01
         }
-        this.setScale(this.size);
+        this.setScale(this.size);*/
     }
 
     hit() {
