@@ -37,6 +37,7 @@ class Puzzle4 extends Room{
         && this.piece3.y == this.piece3Obj.target[1] && this.piece3.x == this.piece3Obj.target[0]
         && this.piece4.y == this.piece4Obj.target[1] && this.piece4.x == this.piece4Obj.target[0]){
             this.lockedDoor.destroy(true);
+            this.sound.play('puzzleSolve');
         }
     }
     makePuzzle4Stage1(){
