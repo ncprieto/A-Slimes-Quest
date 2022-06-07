@@ -26,7 +26,10 @@ class Map{
             type: {
                 start: true,
                 normal: false,
-                boss: false,
+                boss: {
+                    rock: false,
+                    bat: false
+                },
                 prize: false,
                 puzzle: false
             }
@@ -128,7 +131,10 @@ class Map{
                 type: {
                     start: false,
                     normal: true,
-                    boss: false,
+                    boss: {
+                        rock: false,
+                        bat: false
+                    },
                     prize: false,
                     puzzle: false
                 }
@@ -166,7 +172,10 @@ class Map{
                 type: {
                     start: false,
                     normal: true,
-                    boss: false,
+                    boss: {
+                        rock: false,
+                        bat: false
+                    },
                     prize: false,
                     puzzle: false
                 }
@@ -204,7 +213,10 @@ class Map{
                 type: {
                     start: false,
                     normal: true,
-                    boss: false,
+                    boss: {
+                        rock: false,
+                        bat: false
+                    },
                     prize: false,
                     puzzle: false
                 }
@@ -243,7 +255,10 @@ class Map{
                 type: {
                     start: false,
                     normal: true,
-                    boss: false,
+                    boss: {
+                        rock: false,
+                        bat: false
+                    },
                     prize: false,
                     puzzle: false
                 }
@@ -319,8 +334,14 @@ class Map{
                     else{
                         temp += "0";
                     }
-                    if(this.map[i][j].type.boss){
-                        temp += 'b';
+                    if(this.map[i][j].type.boss.rock){
+                        temp += 'k';
+                    }
+                    else{
+                        temp += "0";
+                    }
+                    if(this.map[i][j].type.boss.bat){
+                        temp += 't';
                     }
                     else{
                         temp += "0";
@@ -347,7 +368,8 @@ class Map{
             for(let j  = 0; j < this.rows; j ++){
                 let exitCount = 0;
                 let before = "";
-                if(this.map[i][j] == 0){
+                if((this.map[i][j] == 0) || (i == 1 && j == 2) || (i == 2 && j == 1)
+                   || (i == 2 && j == 3) || (i == 3 && j == 2)){
                     continue;
                 }
                 if(this.map[i][j].exits.up){
@@ -392,6 +414,17 @@ class Map{
         }
     }
     generateScenes() {
+        let pzlBackground;
+        let pieceStr;
+        let doorStr;
+        if(this.name == 'stage1'){
+            pieceStr = 'puzzle_piece_stage1';
+            doorStr = 'walltile_stage1';
+        }
+        else if(this.name == 'stage2'){
+            pieceStr = 'puzzle_piece_stage2';
+            doorStr = 'walltile_stage2';
+        }
         for(let i = 0; i < this.rows; i ++){
             for(let j  = 0; j < this.rows; j ++){
                 if(this.map[i][j] != 0){
@@ -405,21 +438,15 @@ class Map{
                             }
                         }
                         let index = Math.floor(Math.random() * this.puzzleTypes.length);
-                        let pzlBackground;
-                        let pieceStr;
-                        let doorStr;
+
                         switch(this.puzzleTypes[index]){
                             case "puzzle1":
                                 console.log("MAKING PUZZLE ONE");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle1_floor_stage1';
-                                    pieceStr = 'puzzle_piece_stage1';
-                                    doorStr = 'walltile_stage1';
                                 }
                                 else if(this.name == 'stage2'){
                                     pzlBackground = 'puzzle1_floor_stage2';
-                                    pieceStr = 'puzzle_piece_stage2';
-                                    doorStr = 'walltile_stage2';
                                 }
                                 this.map[i][j].exits.scene = new Puzzle1(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
@@ -427,13 +454,9 @@ class Map{
                                 console.log("MAKING  PUZZLE TWO");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle1_floor_stage1';
-                                    pieceStr = 'puzzle_piece_stage1';
-                                    doorStr = 'walltile_stage1';
                                 }
                                 else if(this.name == 'stage2'){
                                     pzlBackground = 'puzzle1_floor_stage2';
-                                    pieceStr = 'puzzle_piece_stage2';
-                                    doorStr = 'walltile_stage2';
                                 }
                                 this.map[i][j].exits.scene = new Puzzle2(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
@@ -441,13 +464,9 @@ class Map{
                                 console.log("MAKING OPUZZLE THREE");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle2_floor_stage1';
-                                    pieceStr = 'puzzle_piece_stage1';
-                                    doorStr = 'walltile_stage1';
                                 }
                                 else if(this.name == 'stage2'){
                                     pzlBackground = 'puzzle2_floor_stage2';
-                                    pieceStr = 'puzzle_piece_stage2';
-                                    doorStr = 'walltile_stage2';
                                 }
                                 this.map[i][j].exits.scene = new Puzzle3(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
@@ -455,13 +474,9 @@ class Map{
                                 console.log("MAKING PUZZLE FOUR");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle2_floor_stage1';
-                                    pieceStr = 'puzzle_piece_stage1';
-                                    doorStr = 'walltile_stage1';
                                 }
                                 else if(this.name == 'stage2'){
                                     pzlBackground = 'puzzle2_floor_stage2';
-                                    pieceStr = 'puzzle_piece_stage2';
-                                    doorStr = 'walltile_stage2';
                                 }
                                 this.map[i][j].exits.scene = new Puzzle4(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
@@ -471,7 +486,10 @@ class Map{
                     else if(this.map[i][j].type.prize){
                         this.map[i][j].exits.scene = new Prize(this.name + "_" + i + j + "_" + "prize");
                     }
-                    else if(this.map[i][j].type.boss){
+                    else if(this.map[i][j].type.boss.rock){
+                        this.map[i][j].exits.scene = new RockBoss(this.name + "_" + i + j + "_" + "boss", doorStr, 'puzzle1_floor_stage1', this.bossCords);
+                    }
+                    else if(this.map[i][j].type.boss.bat){
                         this.map[i][j].exits.scene = new Boss(this.name + "_" + i + j + "_" + "boss");
                     }
                     else if(this.map[i][j].type.start){
@@ -516,7 +534,12 @@ class Map{
             }
         }
         this.singleRooms.splice(index, 1);
-        this.map[this.bossCords[0]][this.bossCords[1]].type.boss = true;
+        if(this.name == 'stage1'){
+            this.map[this.bossCords[0]][this.bossCords[1]].type.boss.rock = true;
+        }
+        else if(this.name == 'stage2'){
+            this.map[this.bossCords[0]][this.bossCords[1]].type.boss.bat = true;
+        }
     }
     // finds two more single rooms and sets them to puzzle and prize rooms
     makePuzzleAndPrizeRoom(){

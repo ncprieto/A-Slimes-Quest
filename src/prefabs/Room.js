@@ -141,8 +141,11 @@ class Room extends Phaser.Scene{
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.puzzleUpdate(this.player, this.doorPos, this.background);
             this.normalUpdate();
         }
+        else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss.rock){
+            gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.rockBossUpdate(this.player, this.doorPos, this.background);
+        }
         else if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.prize) {
-
+            console.log("PUZZLE")
         }
         if(gameRooms[this.stageNum].map[this.roomY][this.roomX].type.boss && this.stageNum == 1) {
             gameRooms[this.stageNum].map[this.roomY][this.roomX].exits.scene.bossUpdate();
