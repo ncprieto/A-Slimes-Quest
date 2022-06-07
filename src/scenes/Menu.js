@@ -84,6 +84,7 @@ class Menu extends Phaser.Scene{
         this.anims.create({key: 'skullMove', frames: this.anims.generateFrameNumbers('skull', {start:0, end: 3}), frameRate: 10, repeat: -1});
         this.anims.create({key: 'batMove', frames: this.anims.generateFrameNumbers('bat', {start:0, end: 4}), frameRate: 10, repeat: -1});
         this.anims.create({key: 'rockBossAnimation', frames: this.anims.generateFrameNumbers('rockBossAnim', {start:0, end: 3}), frameRate: 3, repeat: -1});
+        this.anims.create({key: 'batBossAnimation', frames: this.anims.generateFrameNumbers('eyeBoss', {start:0, end: 4}), frameRate: 6, repeat: -1});
 
         //keyboard inputs
         keyLEFT  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -123,7 +124,7 @@ class Menu extends Phaser.Scene{
             this.music.setLoop(true);
             this.music.play();
             //gameRooms[0].bootRooms();
-            this.scene.start(gameRooms[0].map[2][2].exits.scene.sceneName);
+            this.scene.start(gameRooms[1].map[2][2].exits.scene.sceneName);
         }
         if(Phaser.Input.Keyboard.JustDown(keyT)) {
             if(this.tutorial1.alpha == 1) {
