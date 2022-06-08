@@ -92,7 +92,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.scene.sound.play('upgrade');
             //console.log("power up");
             if(this.powerUp == 'large') {
-                this.size += 0.1;
+                this.size += 0.1;   
                 this.powerUp = null;
             }
             if(this.powerUp == 'small') {

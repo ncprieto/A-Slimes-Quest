@@ -7,6 +7,7 @@ class Boss2 extends Room{
         this.boss.body.setSize(350, 200);
         this.boss.body.immovable = true;
         this.threshold = 0.7;
+        this.boss.play('batBossAnimation');
 
         this.phase = 1;
         this.pause = false;
@@ -60,6 +61,7 @@ class Boss2 extends Room{
                     minion.setScale(minion.size);
                     minion.number = i;
                     minion.timedOut = true;
+                    minion.play('batMove');
                     this.minions[i] = minion;
                     this.canSpawn = false;
                     this.physics.add.collider(this.player, this.minions[i], this.minionCol, null, this);
