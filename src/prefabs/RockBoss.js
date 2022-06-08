@@ -55,46 +55,6 @@ class RockBoss extends Room{
         }
     }
     makeBossFight(){
-        // rock1 ROCK BOSS
-        // this rock is fast and has a fast slam speed but has a shallow slam depth
-        this.rock1 = this.physics.add.sprite(540, 310, 'rockBoss').setScale(0.8).setSize(175, 175).setOrigin(0.5, 0.5).setAlpha(0);
-        this.rock1Obj = {                       // this structure holds data for the various states the boss is in
-            goingUp: false,
-            tracking: false,
-            slamming: false,
-            slamInit: false,
-            slammedY: 310,                      // target y value the boss reaches when 'slamming' down
-            slamSpeed: 5,                       // speed at which boss slams down in pixels
-            recallSpeed: 0.5,                   // how fast the boss gets up after slamming in pixels
-            slamDepth: 90,                      // how deep the boss slams down also in pixels
-            speed: 150,                         // speed at which the boss moves
-            dead: false
-        }
-        this.rock1.play('rockBossAnimation');
-        this.physics.add.collider(this.player, this.rock1, () => this.player.hit(), null, this);
-        this.rock1.body.immovable = true;
-        this.rock1GoUpTimer = this.time.addEvent({delay: 1000, callback: () => this.rock1Obj.goingUp = true, callbackScope: this, loop: true});
-        this.rock1SlamTimer = this.time.addEvent({delay: 2250, callback: () => this.rock1Obj.slamming = true, callbackScope: this, loop: true});
-        // SUB 1 ROCK BOSS
-        // this rock moves prett slow but has a huge slam depth but also slams really slow
-        this.rock2 = this.physics.add.sprite(720, 310, 'rockBoss').setScale(0.8).setSize(175, 175).setOrigin(0.5, 0.5).setAlpha(0);
-        this.rock2Obj = {
-            goingUp: false,
-            tracking: false,
-            slamming: false,
-            slamInit: false,
-            slammedY: 310,
-            slamSpeed: 2,
-            recallSpeed: 1.3,
-            slamDepth: 170,
-            speed: 100,
-            dead: false
-        }
-        this.rock2.play('rockBossAnimation');
-        this.physics.add.collider(this.player, this.rock2, () => this.player.hit(), null, this);
-        this.rock2.body.immovable = true;
-        this.rock2GoUpTimer = this.time.addEvent({delay: 1000, callback: () => this.rock2Obj.goingUp = true, callbackScope: this, loop: true});
-        this.rock2SlamTimer = this.time.addEvent({delay: 3000, callback: () => this.rock2Obj.slamming = true, callbackScope: this, loop: true});
         // PUZZLE PIECE 1
         this.piece1Obj = {
             path: [373, 176, 560],
@@ -147,6 +107,46 @@ class RockBoss extends Room{
             this.piece4.y = this.piece4Obj.path[0];
             this.piece4Spawned = true;}}, callbackScope: this, loop: true});
         this.physics.add.collider(this.player, this.piece4, this.hitPiece4, null, this);
+        // rock1 ROCK BOSS
+        // this rock is fast and has a fast slam speed but has a shallow slam depth
+        this.rock1 = this.physics.add.sprite(540, 310, 'rockBoss').setScale(0.8).setSize(175, 175).setOrigin(0.5, 0.5).setAlpha(0);
+        this.rock1Obj = {                       // this structure holds data for the various states the boss is in
+            goingUp: false,
+            tracking: false,
+            slamming: false,
+            slamInit: false,
+            slammedY: 310,                      // target y value the boss reaches when 'slamming' down
+            slamSpeed: 5,                       // speed at which boss slams down in pixels
+            recallSpeed: 0.5,                   // how fast the boss gets up after slamming in pixels
+            slamDepth: 90,                      // how deep the boss slams down also in pixels
+            speed: 150,                         // speed at which the boss moves
+            dead: false
+        }
+        this.rock1.play('rockBossAnimation');
+        this.physics.add.collider(this.player, this.rock1, () => this.player.hit(), null, this);
+        this.rock1.body.immovable = true;
+        this.rock1GoUpTimer = this.time.addEvent({delay: 1000, callback: () => this.rock1Obj.goingUp = true, callbackScope: this, loop: true});
+        this.rock1SlamTimer = this.time.addEvent({delay: 2250, callback: () => this.rock1Obj.slamming = true, callbackScope: this, loop: true});
+        // SUB 1 ROCK BOSS
+        // this rock moves prett slow but has a huge slam depth but also slams really slow
+        this.rock2 = this.physics.add.sprite(720, 310, 'rockBoss').setScale(0.8).setSize(175, 175).setOrigin(0.5, 0.5).setAlpha(0);
+        this.rock2Obj = {
+            goingUp: false,
+            tracking: false,
+            slamming: false,
+            slamInit: false,
+            slammedY: 310,
+            slamSpeed: 2,
+            recallSpeed: 1.3,
+            slamDepth: 170,
+            speed: 100,
+            dead: false
+        }
+        this.rock2.play('rockBossAnimation');
+        this.physics.add.collider(this.player, this.rock2, () => this.player.hit(), null, this);
+        this.rock2.body.immovable = true;
+        this.rock2GoUpTimer = this.time.addEvent({delay: 1000, callback: () => this.rock2Obj.goingUp = true, callbackScope: this, loop: true});
+        this.rock2SlamTimer = this.time.addEvent({delay: 3000, callback: () => this.rock2Obj.slamming = true, callbackScope: this, loop: true});
         // boss complete screen
         this.bossComplete = this.add.image(0,0,'rockBossComplete').setOrigin(0,0).setAlpha(0);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);

@@ -1,10 +1,8 @@
 class Boss2 extends Room{
     constructor(name){
         super(name);
-        console.log("BOSS");
     }
     bossCreate() {
-        console.log("hello");
         this.boss = this.physics.add.sprite(300, 300, 'eyeBoss')
         this.boss.body.setSize(350, 200);
         this.boss.body.immovable = true;

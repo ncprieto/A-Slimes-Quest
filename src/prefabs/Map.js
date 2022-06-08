@@ -441,7 +441,6 @@ class Map{
 
                         switch(this.puzzleTypes[index]){
                             case "puzzle1":
-                                console.log("MAKING PUZZLE ONE");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle1_floor_stage1';
                                 }
@@ -451,7 +450,6 @@ class Map{
                                 this.map[i][j].exits.scene = new Puzzle1(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                             case "puzzle2":
-                                console.log("MAKING  PUZZLE TWO");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle1_floor_stage1';
                                 }
@@ -461,7 +459,6 @@ class Map{
                                 this.map[i][j].exits.scene = new Puzzle2(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                             case "puzzle3":
-                                console.log("MAKING OPUZZLE THREE");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle2_floor_stage1';
                                 }
@@ -471,7 +468,6 @@ class Map{
                                 this.map[i][j].exits.scene = new Puzzle3(this.name + "_" + i + j + "_" + "puzzle", i, j, prizeX, prizeY, pzlBackground, pieceStr, doorStr);
                                 break;
                             case "puzzle4":
-                                console.log("MAKING PUZZLE FOUR");
                                 if(this.name == 'stage1'){
                                     pzlBackground = 'puzzle2_floor_stage1';
                                 }
